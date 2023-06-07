@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "139752296379",
+    "project_id": "trackminder-963de",
+    "storage_bucket": "trackminder-963de.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:139752296379:android:35c33cbfef0445b9c63e9e",
+        "android_client_info": {
+          "package_name": "com.example.trackminder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "139752296379-eufeennm0f9unrovom990rsl0kvlumb4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.trackminder",
+            "certificate_hash": "f45502f37cb00a8c12beea30b57b815970eb5637"
+          }
+        },
+        {
+          "client_id": "139752296379-0jri72tn6vpkmsngk179qqp57d48g0qm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvVg-Uk2nAuDTJsB_q7U7O_PuhxvswuJQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "139752296379-0jri72tn6vpkmsngk179qqp57d48g0qm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
