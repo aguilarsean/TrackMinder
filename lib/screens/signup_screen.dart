@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:trackminder/screen/home_screen.dart';
+import 'package:trackminder/screens/home_screen.dart';
 
-import '../util/color_utils.dart';
-import '../util/reusable_widgets.dart';
+import '../utils/color_utils.dart';
+import '../utils/reusable_widgets.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});

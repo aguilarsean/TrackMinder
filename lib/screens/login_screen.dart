@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:trackminder/screen/signup_screen.dart';
-import 'package:trackminder/util/color_utils.dart';
+import 'package:trackminder/screens/signup_screen.dart';
+import 'package:trackminder/utils/color_utils.dart';
 
-import '../util/reusable_widgets.dart';
+import '../utils/reusable_widgets.dart';
 import 'home_screen.dart';
 
 class LogInScreen extends StatefulWidget {
