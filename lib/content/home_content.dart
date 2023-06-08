@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeContent extends StatefulWidget {
   @override
@@ -16,7 +17,7 @@ class _HomeContentState extends State<HomeContent> {
     getUserData();
   }
 
-  void getUserData() {
+  void getUserData() async {
     setState(() {
       isLoading = true;
     });
@@ -25,18 +26,32 @@ class _HomeContentState extends State<HomeContent> {
     print(user);
 
     if (user != null) {
-      // String email = user.email ?? 'No email available';
+      String uid = user.uid;
       String idNumber = user.displayName ?? 'No id number';
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('uid', uid);
+      await prefs.setString('idNumber', idNumber);
 
       setState(() {
         welcomeMessage = 'Welcome $idNumber';
         isLoading = false;
       });
     } else {
-      setState(() {
-        welcomeMessage = 'Welcome User';
-        isLoading = false;
-      });
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? uid = prefs.getString('uid');
+      String? idNumber = prefs.getString('idNumber');
+
+      if (uid != null && idNumber != null) {
+        setState(() {
+          welcomeMessage = 'Welcome $idNumber';
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
