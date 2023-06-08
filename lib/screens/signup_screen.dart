@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:trackminder/screens/home_screen.dart';
+import 'package:trackminder/screens/main_screen.dart';
 
 import '../utils/color_utils.dart';
 import '../utils/reusable_widgets.dart';
