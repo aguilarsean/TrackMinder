@@ -127,6 +127,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           email: _emailController.text,
                           password: _passwordController.text)
                       .then((value) {
+                    value.user!.updateDisplayName(_idNumberController.text);
+
                     Navigator.push(
                         context,
                         MaterialPageRoute(
