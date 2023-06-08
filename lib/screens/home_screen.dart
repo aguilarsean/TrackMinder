@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../content/courses_content.dart';
+import 'courses_screen.dart';
 import '../content/home_content.dart';
-import '../content/profile_content.dart';
+import 'profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
             height: kToolbarHeight + MediaQuery.of(context).padding.top,
-            color: Colors.blue,
+            color: Colors.green,
             child: Center(
               child: Text(
                 _screenTitles[_currentIndex],
