@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
             height: kToolbarHeight + MediaQuery.of(context).padding.top,
-            color: Colors.blue, // Replace with your desired color
+            color: Colors.blue,
             child: Center(
               child: Text(
                 _screenTitles[_currentIndex],
