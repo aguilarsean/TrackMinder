@@ -20,10 +20,37 @@ class _HomeScreenState extends State<HomeScreen> {
     ProfileContent(),
   ];
 
+  final List<String> _screenTitles = [
+    'Home',
+    'Courses',
+    'Profile',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_currentIndex],
+      body: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            height: kToolbarHeight + MediaQuery.of(context).padding.top,
+            color: Colors.blue, // Replace with your desired color
+            child: Center(
+              child: Text(
+                _screenTitles[_currentIndex],
+                style: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: _screens[_currentIndex],
+          ),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
@@ -31,6 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
             _currentIndex = index;
           });
         },
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
