@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:trackminder/screens/reset_password.dart';
 import 'package:trackminder/screens/signup_screen.dart';
 import 'package:trackminder/utils/color_utils.dart';
 
@@ -46,9 +47,13 @@ class _LogInScreenState extends State<LogInScreen> {
               reusableTextField("Enter password", Icons.lock_outline, true,
                   _passwordController),
               const SizedBox(
+                height: 5,
+              ),
+              forgetPassword(context),
+              const SizedBox(
                 height: 20,
               ),
-              authButtons(context, true, () {
+              authButtons(context, "LOG IN", () {
                 FirebaseAuth.instance
                     .signInWithEmailAndPassword(
                         email: _emailController.text,
@@ -87,6 +92,24 @@ class _LogInScreenState extends State<LogInScreen> {
           ),
         )
       ],
+    );
+  }
+
+  Widget forgetPassword(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 35,
+      alignment: Alignment.bottomRight,
+      child: TextButton(
+          onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const ResetPasswordScreen())),
+          child: const Text(
+            "Forgot Password?",
+            style: TextStyle(color: Colors.white70),
+            textAlign: TextAlign.right,
+          )),
     );
   }
 }
