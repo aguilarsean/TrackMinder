@@ -118,7 +118,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 usersCollection.add({
                   'email': _emailController.text,
                   'idNumber': _idNumberController.text,
-                  'password': _passwordController.text,
                   'isProfessor': isProfessor,
                 }).then((docRef) {
                   print("data added with ID: ${docRef.id}");
