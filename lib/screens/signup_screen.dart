@@ -114,7 +114,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(
                 height: 30,
               ),
-              authButtons(context, false, () {
+              authButtons(context, "SIGN UP", () {
                 usersCollection.add({
                   'email': _emailController.text,
                   'idNumber': _idNumberController.text,
