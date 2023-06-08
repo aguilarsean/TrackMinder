@@ -1,6 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:trackminder/screens/login_screen.dart';
+
+import '../content/courses_content.dart';
+import '../content/home_content.dart';
+import '../content/profile_content.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -14,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _screens = [
     HomeContent(),
-    IdkContent(),
+    CoursesContent(),
     ProfileContent(),
   ];
 
@@ -35,51 +37,14 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.help),
-            label: 'Idk',
+            icon: Icon(Icons.book),
+            label: 'Courses',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
         ],
-      ),
-    );
-  }
-}
-
-class HomeContent extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Home'),
-    );
-  }
-}
-
-class IdkContent extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('IDK'),
-    );
-  }
-}
-
-class ProfileContent extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        child: const Text("Logout"),
-        onPressed: () {
-          FirebaseAuth.instance.signOut().then((value) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const LogInScreen()),
-            );
-          });
-        },
       ),
     );
   }
