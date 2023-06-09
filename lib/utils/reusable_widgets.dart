@@ -43,6 +43,7 @@ Container authButtons(BuildContext context, String title, Function onTap) {
     decoration: BoxDecoration(borderRadius: BorderRadius.circular(90)),
     child: ElevatedButton(
       onPressed: () {
+        FocusScope.of(context).unfocus();
         onTap();
       },
       style: ButtonStyle(
