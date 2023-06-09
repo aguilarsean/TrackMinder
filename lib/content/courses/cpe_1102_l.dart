@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +15,7 @@ class _CPE1102LcontentState extends State<CPE1102Lcontent> {
   TextEditingController _groupNumberController = TextEditingController();
   TextEditingController _numCodeController = TextEditingController();
   String idNumber = '';
+  bool dataAdded = false;
 
   @override
   void initState() {
@@ -97,11 +100,51 @@ class _CPE1102LcontentState extends State<CPE1102Lcontent> {
                         if (data != null && data.containsKey('idNumbers')) {
                           List<String> idNumbers =
                               List<String>.from(data['idNumbers']!);
-                          idNumbers.add(idNumber);
-
-                          await transaction
-                              .update(groupRef, {'idNumbers': idNumbers});
-                          print('Data updated successfully!');
+                          if (idNumbers.contains(idNumber)) {
+                            // Data already exists in the array
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Error'),
+                                  content: const Text('Please try again!'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: const Text('OK'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          } else {
+                            // Data doesn't exist, add it to the array
+                            idNumbers.add(idNumber);
+                            transaction
+                                .update(groupRef, {'idNumbers': idNumbers});
+                            setState(() {
+                              dataAdded = true;
+                            });
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Success'),
+                                  content: const Text('Attendance is Marked!'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: const Text('OK'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         } else {
                           print('Field "idNumbers" not found!');
                         }
