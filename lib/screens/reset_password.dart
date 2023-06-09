@@ -14,6 +14,10 @@ class ResetPasswordScreen extends StatefulWidget {
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   TextEditingController _emailController = TextEditingController();
 
+  void _unfocusTextFields() {
+    FocusScope.of(context).unfocus();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,29 +31,32 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
       ),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-          hexStringToColor("20BF55"),
-          hexStringToColor("01BAEF")
-        ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 120, 20, 0),
-            child: Column(children: <Widget>[
-              reusableTextField(
-                  "Enter email", Icons.person_outline, false, _emailController),
-              const SizedBox(
-                height: 30,
-              ),
-              authButtons(context, "Reset Password", () {
-                FirebaseAuth.instance
-                    .sendPasswordResetEmail(email: _emailController.text)
-                    .then((value) => Navigator.of(context).pop());
-              }),
-            ]),
+      body: GestureDetector(
+        onTap: _unfocusTextFields,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+            hexStringToColor("20BF55"),
+            hexStringToColor("01BAEF")
+          ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 120, 20, 0),
+              child: Column(children: <Widget>[
+                reusableTextField("Enter email", Icons.person_outline, false,
+                    _emailController),
+                const SizedBox(
+                  height: 30,
+                ),
+                authButtons(context, "Reset Password", () {
+                  FirebaseAuth.instance
+                      .sendPasswordResetEmail(email: _emailController.text)
+                      .then((value) => Navigator.of(context).pop());
+                }),
+              ]),
+            ),
           ),
         ),
       ),
