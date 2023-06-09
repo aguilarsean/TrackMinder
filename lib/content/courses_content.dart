@@ -93,6 +93,7 @@ class _CoursesContentState extends State<CoursesContent> {
       context: context,
       builder: (BuildContext context) {
         String newCode = '';
+        _textEditingController.text = '';
         return AlertDialog(
           title: const Text('Enter Course Code'),
           content: TextFormField(
