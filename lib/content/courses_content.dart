@@ -1,5 +1,8 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'courses/cpe_1102_l.dart';
 import 'courses/cpe_1202_l.dart';
 
@@ -18,22 +21,71 @@ class _CoursesContentState extends State<CoursesContent> {
     // Add more available course codes here
   ];
 
+  CollectionReference? userCollection;
+  String? currentUserId;
+  bool isFirebaseInitialized = false;
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
-    loadTabsFromLocalStorage();
+    getCurrentUserId();
   }
 
-  void loadTabsFromLocalStorage() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      courseCodes = prefs.getStringList('courseCodes') ?? [];
-    });
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    if (!isFirebaseInitialized) {
+      await initializeFirebase();
+    }
+    loadTabsFromFirestore();
   }
 
-  void saveTabsToLocalStorage() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setStringList('courseCodes', courseCodes);
+  Future<void> initializeFirebase() async {
+    try {
+      await Firebase.initializeApp();
+      userCollection = FirebaseFirestore.instance.collection('users');
+      setState(() {
+        isFirebaseInitialized = true;
+      });
+    } catch (error) {
+      print('Firebase initialization failed: $error');
+    }
+  }
+
+  void getCurrentUserId() {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      setState(() {
+        currentUserId = currentUser.uid;
+      });
+    }
+  }
+
+  void loadTabsFromFirestore() async {
+    if (isFirebaseInitialized &&
+        userCollection != null &&
+        currentUserId != null) {
+      final userDoc = await userCollection!.doc(currentUserId).get();
+      if (mounted) {
+        setState(() {
+          if (userDoc.exists) {
+            final tabs = userDoc.get('tabs') as List<dynamic>?;
+            courseCodes = tabs?.cast<String>() ?? [];
+          }
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  void saveTabsToFirestore() async {
+    if (isFirebaseInitialized &&
+        userCollection != null &&
+        currentUserId != null) {
+      final userDoc = userCollection!.doc(currentUserId);
+      await userDoc.set({'tabs': courseCodes});
+    }
   }
 
   void addTab() {
@@ -65,7 +117,7 @@ class _CoursesContentState extends State<CoursesContent> {
                   setState(() {
                     courseCodes.add(newCode);
                   });
-                  saveTabsToLocalStorage();
+                  saveTabsToFirestore();
                   Navigator.of(context).pop();
                 } else {
                   showDialog(
@@ -115,7 +167,7 @@ class _CoursesContentState extends State<CoursesContent> {
                 setState(() {
                   courseCodes.removeAt(index);
                 });
-                saveTabsToLocalStorage();
+                saveTabsToFirestore();
                 Navigator.of(context).pop();
               },
               child: const Text('Delete'),
@@ -146,28 +198,32 @@ class _CoursesContentState extends State<CoursesContent> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: courseCodes.length,
-              itemBuilder: (context, index) {
-                final courseTitle = courseCodes[index];
-                return ListTile(
-                  title: Text(courseTitle),
-                  trailing: const Icon(Icons.arrow_forward),
-                  onTap: () {
-                    navigateToCourseContent(courseTitle);
-                  },
-                  onLongPress: () {
-                    deleteTab(index);
-                  },
-                );
-              },
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: courseCodes.length,
+                    itemBuilder: (context, index) {
+                      final courseTitle = courseCodes[index];
+                      return ListTile(
+                        title: Text(courseTitle),
+                        trailing: const Icon(Icons.arrow_forward),
+                        onTap: () {
+                          navigateToCourseContent(courseTitle);
+                        },
+                        onLongPress: () {
+                          deleteTab(index);
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: addTab,
         child: const Icon(Icons.add),
@@ -177,7 +233,6 @@ class _CoursesContentState extends State<CoursesContent> {
 
   @override
   void dispose() {
-    saveTabsToLocalStorage();
     super.dispose();
   }
 }
