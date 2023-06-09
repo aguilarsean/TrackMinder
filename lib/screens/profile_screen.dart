@@ -7,7 +7,7 @@ class ProfileContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: ElevatedButton(
-        child: const Text("Logout"),
+        child: const Text("Log out"),
         onPressed: () {
           FirebaseAuth.instance.signOut().then((value) {
             Navigator.push(
