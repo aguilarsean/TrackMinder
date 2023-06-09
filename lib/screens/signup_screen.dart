@@ -120,29 +120,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(
                   height: 30,
                 ),
-                authButtons(context, "SIGN UP", () {
-                  usersCollection.add({
-                    'email': _emailController.text,
-                    'idNumber': _idNumberController.text,
-                    'isProfessor': isProfessor,
-                  }).then((docRef) {
-                    print("data added with ID: ${docRef.id}");
-
-                    FirebaseAuth.instance
+                authButtons(context, "SIGN UP", () async {
+                  try {
+                    final UserCredential userCredential = await FirebaseAuth
+                        .instance
                         .createUserWithEmailAndPassword(
-                            email: _emailController.text,
-                            password: _passwordController.text)
-                        .then((value) {
-                      value.user!.updateDisplayName(_idNumberController.text);
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                    );
+                    final User? user = userCredential.user;
+
+                    if (user != null) {
+                      await usersCollection.doc(_idNumberController.text).set({
+                        'email': _emailController.text,
+                        'idNumber': _idNumberController.text,
+                        'isProfessor': isProfessor,
+                        'userId': user.uid,
+                      });
+
+                      await user.updateDisplayName(_idNumberController.text);
 
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MainScreen()));
-                    }).onError((error, stackTrace) {
-                      print("Error ${error.toString()}");
-                    });
-                  });
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MainScreen()),
+                      );
+                    }
+                  } catch (error) {
+                    print("Error: $error");
+                  }
                 }),
               ]),
             ),
