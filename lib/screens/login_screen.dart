@@ -203,7 +203,7 @@ class _LogInScreenState extends State<LogInScreen> {
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const ResetPasswordScreen(),
+                builder: (context) => ResetPasswordScreen(),
               ),
             ),
             child: const Text(
