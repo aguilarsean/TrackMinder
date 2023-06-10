@@ -108,8 +108,8 @@ class _CPE1202LcontentState extends State<CPE1202Lcontent> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: const Text('Error'),
-                            content: const Text(
-                                'The attendance collection does not exist or is not yet created.'),
+                            content:
+                                const Text('Attendance is not yet available.'),
                             actions: <Widget>[
                               TextButton(
                                 child: const Text('OK'),
