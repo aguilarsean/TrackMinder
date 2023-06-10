@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../utils/color_utils.dart';
 import '../../../../utils/reusable_widgets.dart';
@@ -86,15 +87,46 @@ class _CPE1102LcontentState extends State<CPE1102Lcontent> {
 
                     String groupNumber = _groupNumberController.text;
 
-                    DocumentReference courseRef =
-                        firestore.collection('courses').doc('cpe1102L');
-                    CollectionReference classesRef =
-                        courseRef.collection('classes');
-                    DocumentReference groupRef = classesRef.doc(groupNumber);
+                    final currentDate = DateTime.now();
+                    final formattedDate =
+                        DateFormat('MM-dd-yy').format(currentDate);
+                    final collectionName = 'attendance_$formattedDate';
+
+                    final attendanceCollectionRef = firestore
+                        .collection(
+                            '/courses/cpe1202L/groups/1/$collectionName')
+                        .doc('data');
+
+                    bool attendanceCollectionExists =
+                        await attendanceCollectionRef
+                            .get()
+                            .then((snapshot) => snapshot.exists);
+
+                    if (!attendanceCollectionExists) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Error'),
+                            content: const Text(
+                                'The attendance collection does not exist or is not yet created.'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('OK'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      return;
+                    }
 
                     firestore.runTransaction((transaction) async {
                       DocumentSnapshot groupSnapshot =
-                          await transaction.get(groupRef);
+                          await transaction.get(attendanceCollectionRef);
 
                       if (groupSnapshot.exists) {
                         Map<String, dynamic>? data =
@@ -103,7 +135,6 @@ class _CPE1102LcontentState extends State<CPE1102Lcontent> {
                           List<String> idNumbers =
                               List<String>.from(data['idNumbers']!);
                           if (idNumbers.contains(idNumber)) {
-                            // Data already exists in the array
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
@@ -122,10 +153,9 @@ class _CPE1102LcontentState extends State<CPE1102Lcontent> {
                               },
                             );
                           } else {
-                            // Data doesn't exist, add it to the array
                             idNumbers.add(idNumber);
-                            transaction
-                                .update(groupRef, {'idNumbers': idNumbers});
+                            transaction.update(attendanceCollectionRef,
+                                {'idNumbers': idNumbers});
                             setState(() {
                               dataAdded = true;
                             });
