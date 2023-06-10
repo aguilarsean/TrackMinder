@@ -19,6 +19,7 @@ class _LogInScreenState extends State<LogInScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   bool _rememberMe = false;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -48,6 +49,18 @@ class _LogInScreenState extends State<LogInScreen> {
 
   void _unfocusTextFields() {
     FocusScope.of(context).unfocus();
+  }
+
+  void _clearError() {
+    setState(() {
+      _errorMessage = null;
+    });
+  }
+
+  void _showError(String message) {
+    setState(() {
+      _errorMessage = message;
+    });
   }
 
   @override
@@ -87,7 +100,14 @@ class _LogInScreenState extends State<LogInScreen> {
                 const SizedBox(
                   height: 20,
                 ),
+                if (_errorMessage != null)
+                  Text(
+                    _errorMessage!,
+                    style: const TextStyle(color: Colors.red),
+                  ),
                 authButtons(context, "LOG IN", () {
+                  _clearError();
+
                   FirebaseAuth.instance
                       .signInWithEmailAndPassword(
                           email: _emailController.text,
@@ -102,7 +122,8 @@ class _LogInScreenState extends State<LogInScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => const MainScreen()));
-                  }).onError((error, stackTrace) {
+                  }).catchError((error) {
+                    _showError('Invalid email or password.');
                     print("Error ${error.toString()}");
                   });
                 }),
