@@ -47,8 +47,6 @@ class _MyAppState extends State<MyApp> {
       String? email = prefs.getString('email');
       String? password = prefs.getString('password');
       if (email != null && password != null) {
-        // You can perform any additional authentication here if needed,
-        // such as validating the email and password against a server.
         setState(() {
           _isLoggedIn = true;
         });
