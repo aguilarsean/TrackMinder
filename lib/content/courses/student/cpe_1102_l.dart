@@ -3,15 +3,15 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../utils/color_utils.dart';
-import '../../utils/reusable_widgets.dart';
+import '../../../utils/color_utils.dart';
+import '../../../utils/reusable_widgets.dart';
 
-class CPE1202Lcontent extends StatefulWidget {
+class CPE1102Lcontent extends StatefulWidget {
   @override
-  State<CPE1202Lcontent> createState() => _CPE1202LcontentState();
+  State<CPE1102Lcontent> createState() => _CPE1102LcontentState();
 }
 
-class _CPE1202LcontentState extends State<CPE1202Lcontent> {
+class _CPE1102LcontentState extends State<CPE1102Lcontent> {
   TextEditingController _groupNumberController = TextEditingController();
   TextEditingController _numCodeController = TextEditingController();
   String idNumber = '';
@@ -44,7 +44,7 @@ class _CPE1202LcontentState extends State<CPE1202Lcontent> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text(
-          "CPE1202L",
+          "CPE1102L",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
       ),
@@ -70,6 +70,7 @@ class _CPE1202LcontentState extends State<CPE1202Lcontent> {
                     Icons.group_outlined,
                     false,
                     _groupNumberController,
+                    null,
                   ),
                   const SizedBox(height: 30),
                   reusableTextField(
@@ -77,6 +78,7 @@ class _CPE1202LcontentState extends State<CPE1202Lcontent> {
                     Icons.numbers_outlined,
                     false,
                     _numCodeController,
+                    null,
                   ),
                   const SizedBox(height: 30),
                   authButtons(context, "Mark Attendance", () async {
@@ -85,7 +87,7 @@ class _CPE1202LcontentState extends State<CPE1202Lcontent> {
                     String groupNumber = _groupNumberController.text;
 
                     DocumentReference courseRef =
-                        firestore.collection('courses').doc('cpe1202L');
+                        firestore.collection('courses').doc('cpe1102L');
                     CollectionReference classesRef =
                         courseRef.collection('classes');
                     DocumentReference groupRef = classesRef.doc(groupNumber);

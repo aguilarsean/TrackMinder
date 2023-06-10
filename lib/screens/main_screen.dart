@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../content/courses_content.dart';
+import '../content/courses/student/courses_content.dart';
 import '../content/home_content.dart';
 import 'profile_screen.dart';
 
