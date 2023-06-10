@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../content/student/courses_content.dart';
+import '../content/student/student_courses_content.dart';
+import '../content/professor/professor_courses_content.dart';
 import '../content/home_content.dart';
 import 'profile_screen.dart';
 
@@ -13,10 +16,11 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
+  bool isProfessor = false;
 
-  final List<Widget> _screens = [
+  List<Widget> _screens = [
     HomeContent(),
-    CoursesContent(),
+    StudentCoursesContent(),
     ProfileContent(),
   ];
 
@@ -25,6 +29,32 @@ class _MainScreenState extends State<MainScreen> {
     'Courses',
     'Profile',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    final userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user?.displayName)
+        .get();
+
+    if (userDoc.exists) {
+      setState(() {
+        isProfessor = userDoc.data()?['isProfessor'] ?? false;
+        updateCoursesContentWidget();
+      });
+    }
+  }
+
+  void updateCoursesContentWidget() {
+    _screens[1] =
+        isProfessor ? ProfessorCoursesContent() : StudentCoursesContent();
+  }
 
   @override
   Widget build(BuildContext context) {

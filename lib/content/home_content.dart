@@ -33,10 +33,12 @@ class _HomeContentState extends State<HomeContent> {
       await prefs.setString('uid', uid);
       await prefs.setString('idNumber', idNumber);
 
-      setState(() {
-        welcomeMessage = 'Welcome $idNumber';
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          welcomeMessage = 'Welcome $idNumber';
+          isLoading = false;
+        });
+      }
     } else {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? uid = prefs.getString('uid');

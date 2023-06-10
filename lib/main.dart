@@ -1,12 +1,26 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trackminder/screens/login_screen.dart';
 import 'package:trackminder/screens/main_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+
+  await dotenv.load();
+  String apiKey = dotenv.env['FIREBASE_API_KEY'] ?? '';
+  String appId = dotenv.env['FIREBASE_APP_ID'] ?? '';
+  String messagingSenderId = dotenv.env['FIREBASE_MSG_SENDER_ID'] ?? '';
+  String projectId = dotenv.env['FIREBASE_PROJECT_ID'] ?? '';
+
+  await Firebase.initializeApp(
+      options: FirebaseOptions(
+          apiKey: apiKey,
+          appId: appId,
+          messagingSenderId: messagingSenderId,
+          projectId: projectId));
+
   runApp(const MyApp());
 }
 
@@ -51,6 +65,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       home: _isLoggedIn ? const MainScreen() : const LogInScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
