@@ -10,9 +10,14 @@ Image logoWidget(String imageName) {
   );
 }
 
-TextField reusableTextField(String text, IconData icon, bool isPassword,
-    TextEditingController controller) {
-  return TextField(
+FormField<String> reusableTextField(
+  String text,
+  IconData icon,
+  bool isPassword,
+  TextEditingController controller,
+  String? Function(String?)? validator,
+) {
+  return TextFormField(
     controller: controller,
     obscureText: isPassword,
     enableSuggestions: !isPassword,
@@ -27,11 +32,13 @@ TextField reusableTextField(String text, IconData icon, bool isPassword,
       fillColor: Colors.white.withOpacity(0.3),
       floatingLabelBehavior: FloatingLabelBehavior.never,
       border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
-          borderSide: const BorderSide(width: 0, style: BorderStyle.none)),
+        borderRadius: BorderRadius.circular(30.0),
+        borderSide: const BorderSide(width: 0, style: BorderStyle.none),
+      ),
     ),
     keyboardType:
         isPassword ? TextInputType.visiblePassword : TextInputType.emailAddress,
+    validator: validator,
   );
 }
 
