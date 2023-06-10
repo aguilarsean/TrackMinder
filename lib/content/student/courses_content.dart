@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'cpe_1102_l.dart';
-import 'cpe_1202_l.dart';
+import 'courses/cpe_1102_l.dart';
+import 'courses/cpe_1202_l.dart';
 
 class CoursesContent extends StatefulWidget {
   @override
