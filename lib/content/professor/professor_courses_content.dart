@@ -166,10 +166,17 @@ class _ProfessorCoursesContentState extends State<ProfessorCoursesContent> {
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
+                final userDoc = userCollection!.doc(currentUserId);
+                final courseTitle = courseCodes[index];
+                final courseCollection = userDoc.collection(courseTitle);
+
+                await courseCollection.doc(courseTitle).delete();
+
                 setState(() {
                   courseCodes.removeAt(index);
                 });
+
                 saveTabsToFirestore();
                 Navigator.of(context).pop();
               },

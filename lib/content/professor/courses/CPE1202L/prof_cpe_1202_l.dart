@@ -172,10 +172,20 @@ class _ProfCPE1202LcontentState extends State<ProfCPE1202Lcontent> {
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
+                final groupNumber = courseGroup[index];
+                final userDoc = userCollection!.doc(currentUserId);
+                final courseCollection =
+                    userDoc.collection('CPE1202L').doc('CPE1202L');
+                final groupCollection =
+                    courseCollection.collection(groupNumber);
+
+                await groupCollection.doc('data').delete();
+
                 setState(() {
                   courseGroup.removeAt(index);
                 });
+
                 saveTabsToFirestore();
                 Navigator.of(context).pop();
               },
@@ -193,7 +203,13 @@ class _ProfCPE1202LcontentState extends State<ProfCPE1202Lcontent> {
       final courseCollection = userDoc.collection('CPE1202L').doc('CPE1202L');
 
       final groupCollection = courseCollection.collection(groupNumber);
-      await groupCollection.doc('data').set({'attendance': 'Sample Data'});
+      final dataDoc = groupCollection.doc('data');
+
+      dataDoc.get().then((docSnapshot) {
+        if (!docSnapshot.exists) {
+          dataDoc.set({'logs': []});
+        }
+      });
 
       if (groupNumber == 'Group 1') {
         Navigator.push(
