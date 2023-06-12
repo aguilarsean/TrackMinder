@@ -88,7 +88,7 @@ class _Group1ContentState extends State<Group1Content> {
       });
 
       final collectionRef =
-          firestore.collection('/courses/CPE1102L/groups/1/$tabName');
+          firestore.collection('/courses/cpe1102L/groups/1/$tabName');
       await collectionRef.doc('data').delete();
 
       setState(() {
@@ -281,7 +281,7 @@ class _Group1ContentState extends State<Group1Content> {
 
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
       final newCollectionRef =
-          firestore.collection('/courses/CPE1102L/groups/1/$collectionName');
+          firestore.collection('/courses/cpe1102L/groups/1/$collectionName');
 
       final random = Random();
       final String code = List.generate(
@@ -393,7 +393,7 @@ void closeAttendance(BuildContext context) async {
 
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final newCollectionRef =
-        firestore.collection('/courses/CPE1102L/groups/1/$collectionName');
+        firestore.collection('/courses/cpe1102L/groups/1/$collectionName');
     final documentSnapshot = await newCollectionRef.doc('data').get();
     final currentAvailable = documentSnapshot.data()?['available'] ?? false;
     final currentData = documentSnapshot.data();
@@ -503,7 +503,7 @@ class TabScreen extends StatelessWidget {
       ),
       body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         stream: FirebaseFirestore.instance
-            .doc('/courses/CPE1102L/groups/1/$tabName/data')
+            .doc('/courses/cpe1102L/groups/1/$tabName/data')
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

@@ -7,12 +7,12 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
 
-class Group2Content extends StatefulWidget {
+class Group3Content extends StatefulWidget {
   @override
-  _Group2ContentState createState() => _Group2ContentState();
+  _Group3ContentState createState() => _Group3ContentState();
 }
 
-class _Group2ContentState extends State<Group2Content> {
+class _Group3ContentState extends State<Group3Content> {
   List<String> tabs = [];
   bool isLoading = true;
   String? storedCollectionName;
@@ -33,7 +33,7 @@ class _Group2ContentState extends State<Group2Content> {
 
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
       final documentSnapshot = await firestore
-          .doc('/users/$uid/CPE1102L/CPE1102L/Group 2/data/')
+          .doc('/users/$uid/CPE1102L/CPE1102L/Group 3/data/')
           .get();
 
       final data = documentSnapshot.data();
@@ -81,14 +81,14 @@ class _Group2ContentState extends State<Group2Content> {
 
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
       final documentRef =
-          firestore.doc('/users/$uid/CPE1102L/CPE1102L/Group 2/data');
+          firestore.doc('/users/$uid/CPE1102L/CPE1102L/Group 3/data');
 
       await documentRef.update({
         'logs': FieldValue.arrayRemove([tabName]),
       });
 
       final collectionRef =
-          firestore.collection('/courses/cpe1102L/groups/2/$tabName');
+          firestore.collection('/courses/cpe1102L/groups/3/$tabName');
       await collectionRef.doc('data').delete();
 
       setState(() {
@@ -141,7 +141,7 @@ class _Group2ContentState extends State<Group2Content> {
         backgroundColor: Colors.green,
         elevation: 0,
         title: const Text(
-          "Group 2",
+          "Group 3",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
       ),
@@ -281,7 +281,7 @@ class _Group2ContentState extends State<Group2Content> {
 
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
       final newCollectionRef =
-          firestore.collection('/courses/cpe1102L/groups/2/$collectionName');
+          firestore.collection('/courses/cpe1102L/groups/3/$collectionName');
 
       final random = Random();
       final String code = List.generate(
@@ -296,7 +296,7 @@ class _Group2ContentState extends State<Group2Content> {
       final String uid = user?.uid ?? '';
 
       final documentRef =
-          firestore.doc('/users/$uid/CPE1102L/CPE1102L/Group 2/data');
+          firestore.doc('/users/$uid/CPE1102L/CPE1102L/Group 3/data');
       await documentRef.update({
         'logs': FieldValue.arrayUnion([collectionName])
       });
@@ -393,7 +393,7 @@ void closeAttendance(BuildContext context) async {
 
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final newCollectionRef =
-        firestore.collection('/courses/cpe1102L/groups/2/$collectionName');
+        firestore.collection('/courses/cpe1102L/groups/3/$collectionName');
     final documentSnapshot = await newCollectionRef.doc('data').get();
     final currentAvailable = documentSnapshot.data()?['available'] ?? false;
     final currentData = documentSnapshot.data();
@@ -503,7 +503,7 @@ class TabScreen extends StatelessWidget {
       ),
       body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         stream: FirebaseFirestore.instance
-            .doc('/courses/cpe1102L/groups/2/$tabName/data')
+            .doc('/courses/cpe1102L/groups/3/$tabName/data')
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

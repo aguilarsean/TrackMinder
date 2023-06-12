@@ -4,9 +4,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:trackminder/content/professor/courses/CPE1102L/Groups/group_1.dart';
 
+import 'Groups/group_1.dart';
 import 'Groups/group_2.dart';
+import 'Groups/group_3.dart';
 
 class ProfCPE1102Lcontent extends StatefulWidget {
   @override
@@ -19,6 +20,7 @@ class _ProfCPE1102LcontentState extends State<ProfCPE1102Lcontent> {
   List<String> availablecourseGroup = [
     'Group 1',
     'Group 2',
+    'Group 3',
     // Add more available group numbers here
   ];
 
@@ -67,15 +69,15 @@ class _ProfCPE1102LcontentState extends State<ProfCPE1102Lcontent> {
     if (isFirebaseInitialized &&
         userCollection != null &&
         currentUserId != null) {
-      final cpe1102lDoc = await userCollection!
+      final cpe1202lDoc = await userCollection!
           .doc(currentUserId)
           .collection('CPE1102L')
           .doc('CPE1102L')
           .get();
       if (mounted) {
         setState(() {
-          if (cpe1102lDoc.exists) {
-            final tabs = cpe1102lDoc.get('tabs') as List<dynamic>?;
+          if (cpe1202lDoc.exists) {
+            final tabs = cpe1202lDoc.get('tabs') as List<dynamic>?;
             courseGroup = tabs?.cast<String>() ?? [];
           }
           isLoading = false;
@@ -88,11 +90,11 @@ class _ProfCPE1102LcontentState extends State<ProfCPE1102Lcontent> {
     if (isFirebaseInitialized &&
         userCollection != null &&
         currentUserId != null) {
-      final cpe1102lDoc = userCollection!
+      final cpe1202lDoc = userCollection!
           .doc(currentUserId)
           .collection('CPE1102L')
           .doc('CPE1102L');
-      await cpe1102lDoc.set({'tabs': courseGroup});
+      await cpe1202lDoc.set({'tabs': courseGroup});
     }
   }
 
@@ -220,6 +222,11 @@ class _ProfCPE1102LcontentState extends State<ProfCPE1102Lcontent> {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => Group2Content()),
+        );
+      } else if (groupNumber == 'Group 3') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Group3Content()),
         );
       }
     } catch (error) {
