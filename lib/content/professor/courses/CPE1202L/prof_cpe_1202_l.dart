@@ -4,9 +4,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:trackminder/content/professor/courses/CPE1202L/Groups/group_1.dart';
 
+import 'Groups/group_1.dart';
 import 'Groups/group_2.dart';
+import 'Groups/group_3.dart';
 
 class ProfCPE1202Lcontent extends StatefulWidget {
   @override
@@ -19,6 +20,7 @@ class _ProfCPE1202LcontentState extends State<ProfCPE1202Lcontent> {
   List<String> availablecourseGroup = [
     'Group 1',
     'Group 2',
+    'Group 3',
     // Add more available group numbers here
   ];
 
@@ -220,6 +222,11 @@ class _ProfCPE1202LcontentState extends State<ProfCPE1202Lcontent> {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => Group2Content()),
+        );
+      } else if (groupNumber == 'Group 3') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Group3Content()),
         );
       }
     } catch (error) {
