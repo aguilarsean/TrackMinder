@@ -8,18 +8,24 @@ import 'package:trackminder/screens/main_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await dotenv.load();
-  String apiKey = dotenv.env['FIREBASE_API_KEY'] ?? '';
-  String appId = dotenv.env['FIREBASE_APP_ID'] ?? '';
-  String messagingSenderId = dotenv.env['FIREBASE_MSG_SENDER_ID'] ?? '';
-  String projectId = dotenv.env['FIREBASE_PROJECT_ID'] ?? '';
+  try {
+    await dotenv.load();
+    String apiKey = dotenv.env['FIREBASE_API_KEY'] ?? '';
+    String appId = dotenv.env['FIREBASE_APP_ID'] ?? '';
+    String messagingSenderId = dotenv.env['FIREBASE_MSG_SENDER_ID'] ?? '';
+    String projectId = dotenv.env['FIREBASE_PROJECT_ID'] ?? '';
 
-  await Firebase.initializeApp(
+    await Firebase.initializeApp(
       options: FirebaseOptions(
-          apiKey: apiKey,
-          appId: appId,
-          messagingSenderId: messagingSenderId,
-          projectId: projectId));
+        apiKey: apiKey,
+        appId: appId,
+        messagingSenderId: messagingSenderId,
+        projectId: projectId,
+      ),
+    );
+  } catch (e) {
+    print('Firebase initialization failed: $e');
+  }
 
   runApp(const MyApp());
 }
