@@ -1,13 +1,20 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:trackminder/screens/login_screen.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:transparent_image/transparent_image.dart';
+
+import '../content/profile_settings_content.dart';
+import 'login_screen.dart';
 
 class ProfileContent extends StatefulWidget {
   @override
@@ -20,8 +27,11 @@ class _ProfileContentState extends State<ProfileContent> {
   final FirebaseStorage _storage = FirebaseStorage.instanceFor(
       bucket: dotenv.env['FIREBASE_STORAGE_BUCKET'] ?? '');
   final ImagePicker _picker = ImagePicker();
+
   File? _pickedImage;
   String? _imageUrl;
+  // ignore: unused_field
+  bool _isImageLoading = false;
 
   @override
   void initState() {
@@ -31,6 +41,10 @@ class _ProfileContentState extends State<ProfileContent> {
 
   Future<void> _loadProfileImageUrl() async {
     try {
+      setState(() {
+        _isImageLoading = true;
+      });
+
       final User? user = _auth.currentUser;
       if (user == null) return;
 
@@ -38,63 +52,16 @@ class _ProfileContentState extends State<ProfileContent> {
       final DocumentSnapshot snapshot =
           await _firestore.collection('users').doc(userId).get();
 
-      final data = snapshot.data();
-      if (data != null &&
-          data is Map<String, dynamic> &&
-          data.containsKey('profilePicture')) {
+      final data = snapshot.data() as Map<String, dynamic>?;
+      if (data != null && data.containsKey('profilePicture')) {
         setState(() {
           _imageUrl = data['profilePicture'];
+          _isImageLoading = false;
         });
       }
       print(_imageUrl);
     } catch (error) {
       print('Error loading profile image URL: $error');
-    }
-  }
-
-  Future<void> _pickImage() async {
-    final pickedImage = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      setState(() {
-        _pickedImage = File(pickedImage.path);
-      });
-      await _uploadImage();
-    }
-  }
-
-  Future<void> _uploadImage() async {
-    if (_pickedImage == null) return;
-
-    try {
-      final User? user = _auth.currentUser;
-      if (user == null) return;
-
-      final String userId = user.uid;
-      final String fileName = 'profile_image_$userId.jpg';
-      final Reference storageRef =
-          _storage.ref().child('profile_images/$fileName');
-      final UploadTask uploadTask = storageRef.putFile(_pickedImage!);
-      final TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
-
-      final imageUrl = await taskSnapshot.ref.getDownloadURL();
-      setState(() {
-        _imageUrl = imageUrl;
-      });
-
-      await _storeImageUrl(userId, imageUrl);
-    } catch (error) {
-      print('Error uploading image: $error');
-    }
-  }
-
-  Future<void> _storeImageUrl(String userId, String imageUrl) async {
-    try {
-      await _firestore
-          .collection('users')
-          .doc(userId)
-          .update({'profilePicture': imageUrl});
-    } catch (error) {
-      print('Error storing image URL: $error');
     }
   }
 
@@ -160,6 +127,16 @@ class _ProfileContentState extends State<ProfileContent> {
     );
   }
 
+  Future<void> _pickImage() async {
+    final pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        _pickedImage = File(pickedImage.path);
+      });
+      await _uploadImage();
+    }
+  }
+
   void _pickImageFromCamera() async {
     final pickedImage = await _picker.pickImage(source: ImageSource.camera);
     if (pickedImage != null) {
@@ -167,6 +144,75 @@ class _ProfileContentState extends State<ProfileContent> {
         _pickedImage = File(pickedImage.path);
       });
       await _uploadImage();
+    }
+  }
+
+  Future<void> _uploadImage() async {
+    if (_pickedImage == null) return;
+
+    try {
+      setState(() {
+        _isImageLoading = true;
+      });
+      _showImageLoadingAlert();
+
+      final User? user = _auth.currentUser;
+      if (user == null) return;
+
+      final String userId = user.uid;
+      final String fileName = 'profile_image_$userId.jpg';
+      final Reference storageRef =
+          FirebaseStorage.instance.ref().child('profile_images/$fileName');
+
+      final metadata = SettableMetadata(
+        contentType: 'image/jpeg',
+        customMetadata: {'userId': userId},
+      );
+
+      final compressedImage = await compressFile(_pickedImage!);
+      if (compressedImage == null) {
+        print('Error compressing image');
+        return;
+      }
+
+      final UploadTask uploadTask =
+          storageRef.putData(compressedImage, metadata);
+
+      final TaskSnapshot taskSnapshot = await uploadTask;
+
+      final imageUrl = await taskSnapshot.ref.getDownloadURL();
+      setState(() {
+        _imageUrl = imageUrl;
+        _isImageLoading = false;
+      });
+      _hideImageLoadingAlert();
+
+      await _storeImageUrl(userId, imageUrl);
+    } catch (error) {
+      print('Error uploading image: $error');
+    }
+  }
+
+  Future<Uint8List?> compressFile(File? file) async {
+    if (file == null) return null;
+
+    var result = await FlutterImageCompress.compressWithFile(
+      file.absolute.path,
+      minWidth: 300,
+      minHeight: 300,
+      quality: 85,
+    );
+    return result;
+  }
+
+  Future<void> _storeImageUrl(String userId, String imageUrl) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .update({'profilePicture': imageUrl});
+    } catch (error) {
+      print('Error storing image URL: $error');
     }
   }
 
@@ -196,73 +242,196 @@ class _ProfileContentState extends State<ProfileContent> {
     }
   }
 
+  void _openProfileSettingsScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ProfileSettingsContent()),
+    );
+  }
+
+  void _showImageLoadingAlert() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: const AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16.0),
+                Text(
+                  'Changing profile picture...',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _hideImageLoadingAlert() {
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (!kIsWeb)
-            GestureDetector(
-              onTap: () {
-                _showOptionsBottomSheet(context);
-              },
-              child: Container(
+    return StreamBuilder<DocumentSnapshot>(
+      stream: _getUserDocumentStream(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
+
+        final data = snapshot.data?.data() as Map<String, dynamic>?;
+        final displayName = data?['displayName'] as String? ?? '';
+
+        return Column(
+          children: [
+            if (!kIsWeb)
+              GestureDetector(
+                onTap: () {
+                  _showOptionsBottomSheet(context);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.black87,
+                      width: 1.0,
+                    ),
+                    color: Colors.transparent,
+                  ),
+                  width: 100,
+                  height: 100,
+                  margin: const EdgeInsets.only(top: 20),
+                  alignment: Alignment.topCenter,
+                  child: Stack(
+                    children: [
+                      if (_pickedImage != null || _imageUrl != null)
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.transparent,
+                          backgroundImage: _pickedImage != null
+                              ? FileImage(_pickedImage!)
+                              : (_imageUrl != null
+                                  ? FadeInImage.memoryNetwork(
+                                      placeholder: kTransparentImage,
+                                      image: _imageUrl!,
+                                    ).image
+                                  : null),
+                        ),
+                      if (_imageUrl == null && _pickedImage == null)
+                        const Center(
+                          child: Icon(Icons.person, size: 50),
+                        ),
+                      if (_imageUrl != null && _pickedImage == null)
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.transparent,
+                          backgroundImage: _pickedImage != null
+                              ? FileImage(_pickedImage!)
+                              : (_imageUrl != null
+                                  ? FadeInImage.memoryNetwork(
+                                      placeholder: kTransparentImage,
+                                      image: _imageUrl!,
+                                    ).image
+                                  : null),
+                        ),
+                      if (_imageUrl == null && _pickedImage != null)
+                        const Positioned.fill(
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.black),
+                              backgroundColor: Colors.transparent,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            if (kIsWeb)
+              Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: Colors.black87,
                     width: 1.0,
                   ),
+                  color: Colors.transparent,
                 ),
+                width: 100,
+                height: 100,
                 margin: const EdgeInsets.only(top: 20),
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundImage: _pickedImage != null
-                      ? FileImage(_pickedImage!)
-                      : (_imageUrl != null ? NetworkImage(_imageUrl!) : null)
-                          as ImageProvider<Object>?,
-                  child: _pickedImage == null && _imageUrl == null
-                      ? const Icon(Icons.person, size: 50)
-                      : null,
+                alignment: Alignment.topCenter,
+                child: Stack(
+                  children: [
+                    if (_imageUrl == null)
+                      const Center(
+                        child: Icon(Icons.person, size: 50),
+                      ),
+                    if (_imageUrl != null)
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: _pickedImage != null
+                            ? FileImage(_pickedImage!)
+                            : (_imageUrl != null
+                                ? FadeInImage.memoryNetwork(
+                                    placeholder: kTransparentImage,
+                                    image: _imageUrl!,
+                                  ).image
+                                : null),
+                      ),
+                  ],
                 ),
               ),
+            const SizedBox(height: 20),
+            Text(
+              displayName,
+              style: const TextStyle(fontSize: 20),
             ),
-          if (kIsWeb)
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Colors.black87,
-                  width: 1.0,
-                ),
-              ),
-              margin: const EdgeInsets.only(top: 20),
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage: _pickedImage != null
-                    ? FileImage(_pickedImage!)
-                    : (_imageUrl != null ? NetworkImage(_imageUrl!) : null)
-                        as ImageProvider<Object>?,
-                child: _pickedImage == null && _imageUrl == null
-                    ? const Icon(Icons.person, size: 50)
-                    : null,
-              ),
+            const SizedBox(height: 20),
+            const Divider(),
+            ListTile(
+              onTap: _openProfileSettingsScreen,
+              title: const Text('Edit Profile'),
             ),
-          const SizedBox(height: 10),
-          ElevatedButton(
-            child: const Text("Log out"),
-            onPressed: () {
-              _auth.signOut().then((value) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LogInScreen()),
-                );
-              });
-            },
-          ),
-        ],
-      ),
+            const Divider(),
+            ListTile(
+              onTap: _logout,
+              title: const Text('Logout'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Stream<DocumentSnapshot> _getUserDocumentStream() {
+    final User? user = _auth.currentUser;
+    if (user == null) {
+      return const Stream.empty();
+    } else {
+      final String userId = user.uid;
+      return _firestore.collection('users').doc(userId).snapshots();
+    }
+  }
+
+  void _logout() async {
+    await _auth.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const LogInScreen()),
     );
   }
 }
