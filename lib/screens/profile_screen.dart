@@ -281,125 +281,129 @@ class _ProfileContentState extends State<ProfileContent> {
     Navigator.of(context).pop();
   }
 
+  Widget _buildAvatarWidget() {
+    if (!kIsWeb) {
+      return GestureDetector(
+        onTap: () {
+          _showOptionsBottomSheet(context);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: Colors.black87,
+              width: 1.0,
+            ),
+            color: Colors.transparent,
+          ),
+          width: 100,
+          height: 100,
+          margin: const EdgeInsets.only(top: 20),
+          alignment: Alignment.topCenter,
+          child: Stack(
+            children: [
+              if (_pickedImage != null || _imageUrl != null)
+                CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: _pickedImage != null
+                      ? FileImage(_pickedImage!)
+                      : (_imageUrl != null
+                          ? FadeInImage.memoryNetwork(
+                              placeholder: kTransparentImage,
+                              image: _imageUrl!,
+                            ).image
+                          : null),
+                ),
+              if (_imageUrl == null && _pickedImage == null)
+                const Center(
+                  child: Icon(Icons.person, size: 50),
+                ),
+              if (_imageUrl != null && _pickedImage == null)
+                CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: _pickedImage != null
+                      ? FileImage(_pickedImage!)
+                      : (_imageUrl != null
+                          ? FadeInImage.memoryNetwork(
+                              placeholder: kTransparentImage,
+                              image: _imageUrl!,
+                            ).image
+                          : null),
+                ),
+              if (_imageUrl == null && _pickedImage != null)
+                const Positioned.fill(
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                      backgroundColor: Colors.transparent,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: Colors.black87,
+            width: 1.0,
+          ),
+          color: Colors.transparent,
+        ),
+        width: 100,
+        height: 100,
+        margin: const EdgeInsets.only(top: 20),
+        alignment: Alignment.topCenter,
+        child: Stack(
+          children: [
+            if (_imageUrl == null)
+              const Center(
+                child: Icon(Icons.person, size: 50),
+              ),
+            if (_imageUrl != null)
+              CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.transparent,
+                backgroundImage: _pickedImage != null
+                    ? FileImage(_pickedImage!)
+                    : (_imageUrl != null
+                        ? FadeInImage.memoryNetwork(
+                            placeholder: kTransparentImage,
+                            image: _imageUrl!,
+                          ).image
+                        : null),
+              ),
+          ],
+        ),
+      );
+    }
+  }
+
+  Widget _buildDisplayNameWidget(String displayName) {
+    return Text(
+      displayName,
+      style: const TextStyle(fontSize: 20),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
       stream: _getUserDocumentStream(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        }
-
         final data = snapshot.data?.data() as Map<String, dynamic>?;
         final displayName = data?['displayName'] as String? ?? '';
 
         return Column(
           children: [
-            if (!kIsWeb)
-              GestureDetector(
-                onTap: () {
-                  _showOptionsBottomSheet(context);
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.black87,
-                      width: 1.0,
-                    ),
-                    color: Colors.transparent,
-                  ),
-                  width: 100,
-                  height: 100,
-                  margin: const EdgeInsets.only(top: 20),
-                  alignment: Alignment.topCenter,
-                  child: Stack(
-                    children: [
-                      if (_pickedImage != null || _imageUrl != null)
-                        CircleAvatar(
-                          radius: 50,
-                          backgroundColor: Colors.transparent,
-                          backgroundImage: _pickedImage != null
-                              ? FileImage(_pickedImage!)
-                              : (_imageUrl != null
-                                  ? FadeInImage.memoryNetwork(
-                                      placeholder: kTransparentImage,
-                                      image: _imageUrl!,
-                                    ).image
-                                  : null),
-                        ),
-                      if (_imageUrl == null && _pickedImage == null)
-                        const Center(
-                          child: Icon(Icons.person, size: 50),
-                        ),
-                      if (_imageUrl != null && _pickedImage == null)
-                        CircleAvatar(
-                          radius: 50,
-                          backgroundColor: Colors.transparent,
-                          backgroundImage: _pickedImage != null
-                              ? FileImage(_pickedImage!)
-                              : (_imageUrl != null
-                                  ? FadeInImage.memoryNetwork(
-                                      placeholder: kTransparentImage,
-                                      image: _imageUrl!,
-                                    ).image
-                                  : null),
-                        ),
-                      if (_imageUrl == null && _pickedImage != null)
-                        const Positioned.fill(
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.black),
-                              backgroundColor: Colors.transparent,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            if (kIsWeb)
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.black87,
-                    width: 1.0,
-                  ),
-                  color: Colors.transparent,
-                ),
-                width: 100,
-                height: 100,
-                margin: const EdgeInsets.only(top: 20),
-                alignment: Alignment.topCenter,
-                child: Stack(
-                  children: [
-                    if (_imageUrl == null)
-                      const Center(
-                        child: Icon(Icons.person, size: 50),
-                      ),
-                    if (_imageUrl != null)
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Colors.transparent,
-                        backgroundImage: _pickedImage != null
-                            ? FileImage(_pickedImage!)
-                            : (_imageUrl != null
-                                ? FadeInImage.memoryNetwork(
-                                    placeholder: kTransparentImage,
-                                    image: _imageUrl!,
-                                  ).image
-                                : null),
-                      ),
-                  ],
-                ),
-              ),
+            _buildAvatarWidget(),
             const SizedBox(height: 20),
-            Text(
-              displayName,
-              style: const TextStyle(fontSize: 20),
-            ),
+            _buildDisplayNameWidget(displayName),
             const SizedBox(height: 20),
             const Divider(),
             ListTile(
