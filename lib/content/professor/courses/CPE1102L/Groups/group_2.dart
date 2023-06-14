@@ -371,7 +371,7 @@ class _Group2ContentState extends State<Group2Content> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Open'),
-            content: const Text('Attendance is now close and available.'),
+            content: const Text('Attendance is now open and available.'),
             actions: [
               TextButton(
                 onPressed: () {

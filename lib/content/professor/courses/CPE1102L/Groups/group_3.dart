@@ -371,7 +371,7 @@ class _Group3ContentState extends State<Group3Content> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Open'),
-            content: const Text('Attendance is now close and available.'),
+            content: const Text('Attendance is now open and available.'),
             actions: [
               TextButton(
                 onPressed: () {
