@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,13 +30,22 @@ class _HomeContentState extends State<HomeContent> {
       String uid = user.uid;
       String idNumber = user.displayName ?? 'No id number';
 
+      DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(idNumber)
+          .get();
+
+      Map<String, dynamic>? data = docSnapshot.data() as Map<String, dynamic>?;
+      String profileName = data?['profileName'] ?? '';
+
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('uid', uid);
       await prefs.setString('idNumber', idNumber);
+      await prefs.setString('profileName', profileName);
 
       if (mounted) {
         setState(() {
-          welcomeMessage = 'Welcome $idNumber';
+          welcomeMessage = 'Welcome $profileName';
           isLoading = false;
         });
       }
@@ -43,10 +53,11 @@ class _HomeContentState extends State<HomeContent> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? uid = prefs.getString('uid');
       String? idNumber = prefs.getString('idNumber');
+      String? profileName = prefs.getString('profileName');
 
-      if (uid != null && idNumber != null) {
+      if (uid != null && idNumber != null && profileName != null) {
         setState(() {
-          welcomeMessage = 'Welcome $idNumber';
+          welcomeMessage = 'Welcome $profileName';
           isLoading = false;
         });
       } else {

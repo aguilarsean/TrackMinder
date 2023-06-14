@@ -39,10 +39,13 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
     super.dispose();
   }
 
-  void _updateDisplayName() async {
+  void _updateProfileName() async {
     if (_isButtonDisabled) return;
     _unfocusTextFields();
-    final User? user = _auth.currentUser;
+
+    User? user = FirebaseAuth.instance.currentUser;
+    String idNumber = user?.displayName ?? 'No id number';
+
     if (user == null) return;
 
     try {
@@ -51,17 +54,16 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
         _isSnackbarVisible = true;
       });
 
-      await user.updateDisplayName(_displayNameController.text);
       await _firestore
           .collection('users')
-          .doc(user.uid)
-          .update({'displayName': _displayNameController.text});
+          .doc(idNumber)
+          .update({'profileName': _displayNameController.text});
       ScaffoldMessenger.of(_context).showSnackBar(
-        const SnackBar(content: Text('Display name updated successfully.')),
+        const SnackBar(content: Text('Profile name updated successfully.')),
       );
     } catch (error) {
       ScaffoldMessenger.of(_context).showSnackBar(
-        const SnackBar(content: Text('Failed to update display name.')),
+        const SnackBar(content: Text('Failed to update profile name.')),
       );
     } finally {
       setState(() {
@@ -206,13 +208,13 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Display Name', style: TextStyle(fontSize: 18)),
+                const Text('Profile Name', style: TextStyle(fontSize: 18)),
                 Opacity(
                   opacity: _isButtonDisabled ? 0.5 : 1.0,
                   child: TextFormField(
                     controller: _displayNameController,
                     decoration: const InputDecoration(
-                      hintText: 'Enter your display name',
+                      hintText: 'Enter your profile name',
                     ),
                   ),
                 ),
@@ -220,8 +222,8 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
                 Opacity(
                   opacity: _isButtonDisabled ? 0.5 : 1.0,
                   child: ElevatedButton(
-                    onPressed: _updateDisplayName,
-                    child: const Text('Update Display Name'),
+                    onPressed: _updateProfileName,
+                    child: const Text('Update Profile Name'),
                   ),
                 ),
                 const SizedBox(height: 32.0),

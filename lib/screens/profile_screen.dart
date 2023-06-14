@@ -384,10 +384,17 @@ class _ProfileContentState extends State<ProfileContent> {
     }
   }
 
+  Widget _buildProfileNameWidget(String profileName) {
+    return Text(
+      profileName,
+      style: const TextStyle(fontSize: 20),
+    );
+  }
+
   Widget _buildDisplayNameWidget(String displayName) {
     return Text(
       displayName,
-      style: const TextStyle(fontSize: 20),
+      style: const TextStyle(fontSize: 14),
     );
   }
 
@@ -396,26 +403,49 @@ class _ProfileContentState extends State<ProfileContent> {
     return StreamBuilder<DocumentSnapshot>(
       stream: _getUserDocumentStream(),
       builder: (context, snapshot) {
-        final data = snapshot.data?.data() as Map<String, dynamic>?;
-        final displayName = data?['displayName'] as String? ?? '';
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-        return Column(
-          children: [
-            _buildAvatarWidget(),
-            const SizedBox(height: 20),
-            _buildDisplayNameWidget(displayName),
-            const SizedBox(height: 20),
-            const Divider(),
-            ListTile(
-              onTap: _openProfileSettingsScreen,
-              title: const Text('Edit Profile'),
-            ),
-            const Divider(),
-            ListTile(
-              onTap: _logout,
-              title: const Text('Logout'),
-            ),
-          ],
+        User? user = FirebaseAuth.instance.currentUser;
+        String idNumber = user?.displayName ?? 'No id number';
+
+        return FutureBuilder<DocumentSnapshot>(
+          future: FirebaseFirestore.instance
+              .collection('users')
+              .doc(idNumber)
+              .get(),
+          builder: (context, docSnapshot) {
+            if (docSnapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            Map<String, dynamic>? data =
+                docSnapshot.data?.data() as Map<String, dynamic>?;
+
+            String profileName = data?['profileName'] ?? '';
+            final displayName = user?.displayName;
+
+            return Column(
+              children: [
+                _buildAvatarWidget(),
+                const SizedBox(height: 20),
+                _buildProfileNameWidget(profileName),
+                _buildDisplayNameWidget(displayName!),
+                const SizedBox(height: 20),
+                const Divider(),
+                ListTile(
+                  onTap: _openProfileSettingsScreen,
+                  title: const Text('Edit Profile'),
+                ),
+                const Divider(),
+                ListTile(
+                  onTap: _logout,
+                  title: const Text('Logout'),
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -426,8 +456,9 @@ class _ProfileContentState extends State<ProfileContent> {
     if (user == null) {
       return const Stream.empty();
     } else {
-      final String userId = user.uid;
-      return _firestore.collection('users').doc(userId).snapshots();
+      User? user = FirebaseAuth.instance.currentUser;
+      String idNumber = user?.displayName ?? 'No id number';
+      return _firestore.collection('users').doc(idNumber).snapshots();
     }
   }
 

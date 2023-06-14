@@ -68,15 +68,25 @@ class _ProfessorCoursesContentState extends State<ProfessorCoursesContent> {
     if (isFirebaseInitialized &&
         userCollection != null &&
         currentUserId != null) {
-      final userDoc = await userCollection!.doc(currentUserId).get();
-      if (mounted) {
-        setState(() {
-          if (userDoc.exists) {
-            final tabs = userDoc.get('tabs') as List<dynamic>?;
-            courseCodes = tabs?.cast<String>() ?? [];
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUserId)
+          .get();
+
+      if (userDoc.exists) {
+        final userUidDoc =
+            FirebaseFirestore.instance.collection('users').doc(currentUserId);
+        final tabsDoc = await userUidDoc.get();
+
+        final tabs = tabsDoc.get('tabs') as List<dynamic>?;
+        if (mounted) {
+          if (tabs != null) {
+            setState(() {
+              courseCodes = tabs.cast<String>();
+              isLoading = false;
+            });
           }
-          isLoading = false;
-        });
+        }
       }
     }
   }
@@ -86,7 +96,7 @@ class _ProfessorCoursesContentState extends State<ProfessorCoursesContent> {
         userCollection != null &&
         currentUserId != null) {
       final userDoc = userCollection!.doc(currentUserId);
-      await userDoc.set({'tabs': courseCodes});
+      await userDoc.update({'tabs': courseCodes});
     }
   }
 

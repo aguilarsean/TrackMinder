@@ -205,6 +205,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               'userId': user.uid,
                             });
 
+                            await FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(user.uid)
+                                .set({
+                              'profileName': _idNumberController.text,
+                              'tabs': []
+                            });
+
                             await user
                                 .updateDisplayName(_idNumberController.text);
 
