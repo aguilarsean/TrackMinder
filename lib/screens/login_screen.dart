@@ -131,6 +131,9 @@ class _LogInScreenState extends State<LogInScreen> {
                     });
                     _hideLoadingAlert();
 
+                    _emailController.clear();
+                    _passwordController.clear();
+
                     Navigator.push(
                         context,
                         MaterialPageRoute(
