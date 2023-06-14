@@ -19,7 +19,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _idNumberController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+
   bool isProfessor = false;
+  bool isCreating = false;
   final _formKey = GlobalKey<FormState>();
 
   CollectionReference usersCollection =
@@ -195,6 +197,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           final User? user = userCredential.user;
 
                           if (user != null) {
+                            setState(() {
+                              isCreating = true;
+                            });
+                            _showLoadingAlert();
+
                             await usersCollection
                                 .doc(_idNumberController.text)
                                 .set({
@@ -216,6 +223,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             await user
                                 .updateDisplayName(_idNumberController.text);
 
+                            setState(() {
+                              isCreating = false;
+                            });
+                            _hideLoadingAlert();
+
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -224,13 +236,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           }
                         } on FirebaseAuthException catch (error) {
                           if (error.code == 'email-already-in-use') {
+                            setState(() {
+                              isCreating = false;
+                            });
+                            _hideLoadingAlert();
+
                             _showErrorMessage(
                                 'The email address is already in use. Please try again with a different email.');
                           } else {
+                            setState(() {
+                              isCreating = false;
+                            });
+                            _hideLoadingAlert();
+
                             _showErrorMessage(
                                 'An error occurred while signing up. Please try again.');
                           }
                         } catch (error) {
+                          setState(() {
+                            isCreating = false;
+                          });
+                          _hideLoadingAlert();
+
                           _showErrorMessage(
                               'An error occurred while signing up. Please try again.');
                         }
@@ -244,5 +271,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       ),
     );
+  }
+
+  void _showLoadingAlert() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: const AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16.0),
+                Text(
+                  'Creating account...',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _hideLoadingAlert() {
+    Navigator.of(context).pop();
   }
 }

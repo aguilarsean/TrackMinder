@@ -18,7 +18,9 @@ class LogInScreen extends StatefulWidget {
 class _LogInScreenState extends State<LogInScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+
   bool _rememberMe = false;
+  bool isLoggingIn = false;
   String? _errorMessage;
 
   @override
@@ -108,6 +110,11 @@ class _LogInScreenState extends State<LogInScreen> {
                 authButtons(context, "LOG IN", () {
                   _clearError();
 
+                  setState(() {
+                    isLoggingIn = true;
+                  });
+                  _showLoadingAlert();
+
                   FirebaseAuth.instance
                       .signInWithEmailAndPassword(
                           email: _emailController.text,
@@ -118,11 +125,22 @@ class _LogInScreenState extends State<LogInScreen> {
                       _saveLoginCredentials(
                           _emailController.text, _passwordController.text);
                     }
+
+                    setState(() {
+                      isLoggingIn = false;
+                    });
+                    _hideLoadingAlert();
+
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const MainScreen()));
                   }).catchError((error) {
+                    setState(() {
+                      isLoggingIn = false;
+                    });
+                    _hideLoadingAlert();
+
                     _showError('Invalid email or password.');
                     print("Error ${error.toString()}");
                   });
@@ -220,5 +238,37 @@ class _LogInScreenState extends State<LogInScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('email', email);
     prefs.setString('password', password);
+  }
+
+  void _showLoadingAlert() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: const AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16.0),
+                Text(
+                  'Logging in...',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _hideLoadingAlert() {
+    Navigator.of(context).pop();
   }
 }
