@@ -13,7 +13,7 @@ class ProfileSettingsContent extends StatefulWidget {
 }
 
 class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
-  late final TextEditingController _displayNameController;
+  late final TextEditingController _profileNameController;
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
   late final FirebaseAuth _auth;
@@ -26,8 +26,7 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
   @override
   void initState() {
     super.initState();
-    _displayNameController = TextEditingController();
-    _emailController = TextEditingController();
+    _profileNameController = TextEditingController();
     _passwordController = TextEditingController();
     _auth = FirebaseAuth.instance;
     _firestore = FirebaseFirestore.instance;
@@ -35,8 +34,7 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
 
   @override
   void dispose() {
-    _displayNameController.dispose();
-    _emailController.dispose();
+    _profileNameController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -61,7 +59,7 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
       await _firestore
           .collection('users')
           .doc(idNumber)
-          .update({'profileName': _displayNameController.text});
+          .update({'profileName': _profileNameController.text});
 
       setState(() {
         _isButtonDisabled = false;
@@ -73,30 +71,9 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
       ScaffoldMessenger.of(_context).showSnackBar(
         const SnackBar(content: Text('Profile name updated successfully.')),
       );
+
+      _profileNameController.clear();
     } catch (error) {
-      _hideAlert();
-      ScaffoldMessenger.of(_context).showSnackBar(
-        const SnackBar(content: Text('Failed to update profile name.')),
-      );
-    }
-  }
-
-  void _updateEmail() async {
-    if (_isButtonDisabled) return;
-    _unfocusTextFields();
-    final User? user = _auth.currentUser;
-    if (user == null) return;
-
-    setState(() {
-      _isButtonDisabled = true;
-      _isSnackbarVisible = true;
-      _isLoading = true;
-    });
-    _showUpdatingAlert();
-
-    try {
-      await user.updateEmail(_emailController.text);
-
       setState(() {
         _isButtonDisabled = false;
         _isSnackbarVisible = false;
@@ -105,12 +82,7 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
       _hideAlert();
 
       ScaffoldMessenger.of(_context).showSnackBar(
-        const SnackBar(content: Text('Email updated successfully.')),
-      );
-    } catch (error) {
-      _hideAlert();
-      ScaffoldMessenger.of(_context).showSnackBar(
-        const SnackBar(content: Text('Failed to update email.')),
+        const SnackBar(content: Text('Failed to update profile name.')),
       );
     }
   }
@@ -141,8 +113,16 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
       ScaffoldMessenger.of(_context).showSnackBar(
         const SnackBar(content: Text('Password updated successfully.')),
       );
+
+      _passwordController.clear();
     } catch (error) {
+      setState(() {
+        _isButtonDisabled = false;
+        _isSnackbarVisible = false;
+        _isLoading = false;
+      });
       _hideAlert();
+
       ScaffoldMessenger.of(_context).showSnackBar(
         const SnackBar(content: Text('Failed to update password.')),
       );
@@ -207,7 +187,13 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
             MaterialPageRoute(builder: (context) => const LogInScreen()),
             (route) => false);
       } catch (error) {
+        setState(() {
+          _isButtonDisabled = false;
+          _isSnackbarVisible = false;
+          _isLoading = false;
+        });
         _hideAlert();
+
         ScaffoldMessenger.of(_context).showSnackBar(
           const SnackBar(content: Text('Failed to delete account.')),
         );
@@ -279,6 +265,17 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
     Navigator.of(context).pop();
   }
 
+  Future<String> getUserEmail() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+
+    if (user != null) {
+      return user.email ?? '';
+    }
+
+    return '';
+  }
+
   @override
   Widget build(BuildContext context) {
     _context = context;
@@ -305,7 +302,7 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
                 Opacity(
                   opacity: _isButtonDisabled ? 0.5 : 1.0,
                   child: TextFormField(
-                    controller: _displayNameController,
+                    controller: _profileNameController,
                     decoration: const InputDecoration(
                       hintText: 'Enter your profile name',
                     ),
@@ -321,22 +318,41 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
                 ),
                 const SizedBox(height: 32.0),
                 const Text('Email', style: TextStyle(fontSize: 18)),
-                Opacity(
-                  opacity: _isButtonDisabled ? 0.5 : 1.0,
-                  child: TextFormField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter your email',
+                const SizedBox(height: 10.0),
+                Stack(
+                  children: [
+                    FutureBuilder<String>(
+                      future: getUserEmail(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            return Text(
+                              snapshot.data ?? '',
+                              style: const TextStyle(fontSize: 16),
+                            );
+                          }
+                        } else {
+                          return const Text(
+                            '',
+                            style: TextStyle(fontSize: 16),
+                          );
+                        }
+                      },
                     ),
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                Opacity(
-                  opacity: _isButtonDisabled ? 0.5 : 1.0,
-                  child: ElevatedButton(
-                    onPressed: _updateEmail,
-                    child: const Text('Update Email'),
-                  ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 32),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.black54,
+                            width: 1.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 32.0),
                 const Text('Password', style: TextStyle(fontSize: 18)),
@@ -363,9 +379,15 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
                   opacity: _isButtonDisabled ? 0.5 : 1.0,
                   child: ElevatedButton(
                     onPressed: _deleteAccount,
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                    child: const Text('Delete Account'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                    ),
+                    child: const Text(
+                      'Delete Account',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ],
