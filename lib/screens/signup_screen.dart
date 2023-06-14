@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, prefer_final_fields
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -196,6 +198,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             await usersCollection
                                 .doc(_idNumberController.text)
                                 .set({
+                              'profileName': _idNumberController.text,
                               'email': _emailController.text,
                               'idNumber': _idNumberController.text,
                               'isProfessor': isProfessor,
