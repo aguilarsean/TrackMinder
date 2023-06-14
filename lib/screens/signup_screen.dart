@@ -49,7 +49,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } else if (password.length < 8) {
       return 'Password must be at least 8 characters long.';
     } else if (!_hasValidPasswordFormat(password)) {
-      return 'Password must contain at least one letter, one number, and one special character.';
+      return 'Password requirements not met.\nInclude a letter, a number, and a special character.';
     }
     return null;
   }
