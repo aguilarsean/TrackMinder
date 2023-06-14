@@ -16,6 +16,7 @@ class _Group2ContentState extends State<Group2Content> {
   List<String> tabs = [];
   bool isLoading = true;
   String? storedCollectionName;
+  bool isRefreshing = false;
 
   @override
   void initState() {
@@ -25,8 +26,24 @@ class _Group2ContentState extends State<Group2Content> {
     });
   }
 
+  Future<void> refreshTabs() async {
+    if (!isRefreshing) {
+      setState(() {
+        isRefreshing = true;
+      });
+      loadTabs();
+      setState(() {
+        isRefreshing = false;
+      });
+    }
+  }
+
   void loadTabs() async {
     try {
+      setState(() {
+        isLoading = true;
+      });
+
       final FirebaseAuth auth = FirebaseAuth.instance;
       final User? user = auth.currentUser;
       final String uid = user?.uid ?? '';
@@ -185,70 +202,73 @@ class _Group2ContentState extends State<Group2Content> {
                     ),
                   ),
                   Expanded(
-                    child: isLoading
+                    child: isRefreshing && isLoading
                         ? const Center(
                             child: CircularProgressIndicator(),
                           )
-                        : ListView.separated(
-                            separatorBuilder: (context, index) =>
-                                const Divider(),
-                            itemCount: tabs.length,
-                            itemBuilder: (context, index) {
-                              final tabName = tabs[index];
+                        : RefreshIndicator(
+                            onRefresh: refreshTabs,
+                            child: ListView.separated(
+                              separatorBuilder: (context, index) =>
+                                  const Divider(),
+                              itemCount: tabs.length,
+                              itemBuilder: (context, index) {
+                                final tabName = tabs[index];
 
-                              return GestureDetector(
-                                onLongPress: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text('Delete Tab'),
-                                        content: const Text(
-                                            'Are you sure you want to delete this tab?'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text('Cancel'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                              deleteTab(tabName);
-                                            },
-                                            child: const Text('Delete'),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                                child: Dismissible(
-                                  key: Key(tabName),
-                                  onDismissed: (direction) {
-                                    deleteTab(tabName);
+                                return GestureDetector(
+                                  onLongPress: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text('Delete Tab'),
+                                          content: const Text(
+                                              'Are you sure you want to delete this tab?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text('Cancel'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                                deleteTab(tabName);
+                                              },
+                                              child: const Text('Delete'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
                                   },
-                                  background: Container(
-                                    color: Colors.red,
-                                    alignment: Alignment.centerRight,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16),
-                                    child: const Icon(
-                                      Icons.delete,
-                                      color: Colors.white,
+                                  child: Dismissible(
+                                    key: Key(tabName),
+                                    onDismissed: (direction) {
+                                      deleteTab(tabName);
+                                    },
+                                    background: Container(
+                                      color: Colors.red,
+                                      alignment: Alignment.centerRight,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16),
+                                      child: const Icon(
+                                        Icons.delete,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    child: ListTile(
+                                      onTap: () {
+                                        openTabScreen(tabName);
+                                      },
+                                      title: Text(tabName),
+                                      trailing: const Icon(Icons.arrow_forward),
                                     ),
                                   ),
-                                  child: ListTile(
-                                    onTap: () {
-                                      openTabScreen(tabName);
-                                    },
-                                    title: Text(tabName),
-                                    trailing: const Icon(Icons.arrow_forward),
-                                  ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
                   ),
                 ],
