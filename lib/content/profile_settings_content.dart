@@ -1,8 +1,9 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, unused_field
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:trackminder/screens/login_screen.dart';
 
 class ProfileSettingsContent extends StatefulWidget {
   const ProfileSettingsContent({Key? key}) : super(key: key);
@@ -20,6 +21,7 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
   late BuildContext _context;
   bool _isButtonDisabled = false;
   bool _isSnackbarVisible = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -48,28 +50,34 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
 
     if (user == null) return;
 
-    try {
-      setState(() {
-        _isButtonDisabled = true;
-        _isSnackbarVisible = true;
-      });
+    setState(() {
+      _isButtonDisabled = true;
+      _isSnackbarVisible = true;
+      _isLoading = true;
+    });
+    _showUpdatingAlert();
 
+    try {
       await _firestore
           .collection('users')
           .doc(idNumber)
           .update({'profileName': _displayNameController.text});
+
+      setState(() {
+        _isButtonDisabled = false;
+        _isSnackbarVisible = false;
+        _isLoading = false;
+      });
+      _hideAlert();
+
       ScaffoldMessenger.of(_context).showSnackBar(
         const SnackBar(content: Text('Profile name updated successfully.')),
       );
     } catch (error) {
+      _hideAlert();
       ScaffoldMessenger.of(_context).showSnackBar(
         const SnackBar(content: Text('Failed to update profile name.')),
       );
-    } finally {
-      setState(() {
-        _isButtonDisabled = false;
-        _isSnackbarVisible = false;
-      });
     }
   }
 
@@ -79,54 +87,65 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
     final User? user = _auth.currentUser;
     if (user == null) return;
 
-    try {
-      setState(() {
-        _isButtonDisabled = true;
-        _isSnackbarVisible = true;
-      });
+    setState(() {
+      _isButtonDisabled = true;
+      _isSnackbarVisible = true;
+      _isLoading = true;
+    });
+    _showUpdatingAlert();
 
+    try {
       await user.updateEmail(_emailController.text);
+
+      setState(() {
+        _isButtonDisabled = false;
+        _isSnackbarVisible = false;
+        _isLoading = false;
+      });
+      _hideAlert();
+
       ScaffoldMessenger.of(_context).showSnackBar(
         const SnackBar(content: Text('Email updated successfully.')),
       );
     } catch (error) {
+      _hideAlert();
       ScaffoldMessenger.of(_context).showSnackBar(
         const SnackBar(content: Text('Failed to update email.')),
       );
-    } finally {
-      setState(() {
-        _isButtonDisabled = false;
-        _isSnackbarVisible = false;
-      });
     }
   }
 
   void _updatePassword() async {
-    if (_isButtonDisabled) {
-      return _unfocusTextFields();
-    }
+    if (_isButtonDisabled) return;
+    _unfocusTextFields();
     final User? user = _auth.currentUser;
     if (user == null) return;
 
-    try {
-      setState(() {
-        _isButtonDisabled = true;
-        _isSnackbarVisible = true;
-      });
+    setState(() {
+      _isButtonDisabled = true;
+      _isSnackbarVisible = true;
+      _isLoading = true;
+    });
+    _showUpdatingAlert();
 
+    try {
       await user.updatePassword(_passwordController.text);
+
+      setState(() {
+        _isButtonDisabled = false;
+        _isSnackbarVisible = false;
+        _isLoading = false;
+      });
+      _hideAlert();
+
       ScaffoldMessenger.of(_context).showSnackBar(
         const SnackBar(content: Text('Password updated successfully.')),
       );
     } catch (error) {
+      _hideAlert();
       ScaffoldMessenger.of(_context).showSnackBar(
         const SnackBar(content: Text('Failed to update password.')),
       );
-    } finally {
-      setState(() {
-        _isButtonDisabled = false;
-        _isSnackbarVisible = false;
-      });
     }
   }
 
@@ -134,7 +153,10 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
     if (_isButtonDisabled) return;
     _unfocusTextFields();
     final User? user = _auth.currentUser;
+
     if (user == null) return;
+
+    String idNumber = user.displayName ?? 'No id number';
 
     final bool? confirm = await showDialog<bool>(
       context: _context,
@@ -156,34 +178,105 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
       },
     );
 
+    setState(() {
+      _isButtonDisabled = true;
+      _isSnackbarVisible = true;
+      _isLoading = true;
+    });
+    _showDeletingAlert();
+
     if (confirm == true) {
       try {
-        setState(() {
-          _isButtonDisabled = true;
-          _isSnackbarVisible = true;
-        });
-
         await _firestore.collection('users').doc(user.uid).delete();
+        await _firestore.collection('users').doc(idNumber).delete();
         await user.delete();
+
         ScaffoldMessenger.of(_context).showSnackBar(
           const SnackBar(content: Text('Account deleted successfully.')),
         );
-        Navigator.pop(_context);
-      } catch (error) {
-        ScaffoldMessenger.of(_context).showSnackBar(
-          const SnackBar(content: Text('Failed to delete account.')),
-        );
-      } finally {
+
         setState(() {
           _isButtonDisabled = false;
           _isSnackbarVisible = false;
+          _isLoading = false;
         });
+        _hideAlert();
+
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const LogInScreen()),
+            (route) => false);
+      } catch (error) {
+        _hideAlert();
+        ScaffoldMessenger.of(_context).showSnackBar(
+          const SnackBar(content: Text('Failed to delete account.')),
+        );
       }
     }
   }
 
   void _unfocusTextFields() {
     FocusScope.of(_context).unfocus();
+  }
+
+  void _showDeletingAlert() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: const AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16.0),
+                Text(
+                  'Deleting account...',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showUpdatingAlert() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: const AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16.0),
+                Text(
+                  'Updating...',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _hideAlert() {
+    Navigator.of(context).pop();
   }
 
   @override

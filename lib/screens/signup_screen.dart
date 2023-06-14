@@ -186,6 +186,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     const SizedBox(height: 30),
                     authButtons(context, 'SIGN UP', () async {
+                      setState(() {
+                        isCreating = true;
+                      });
+                      _showLoadingAlert();
+
                       if (_formKey.currentState!.validate()) {
                         try {
                           final UserCredential userCredential =
@@ -197,11 +202,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           final User? user = userCredential.user;
 
                           if (user != null) {
-                            setState(() {
-                              isCreating = true;
-                            });
-                            _showLoadingAlert();
-
                             await usersCollection
                                 .doc(_idNumberController.text)
                                 .set({
