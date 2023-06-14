@@ -113,6 +113,7 @@ class _ProfCPE1102LcontentState extends State<ProfCPE1102Lcontent> {
                 newGroup = value;
               });
             },
+            decoration: const InputDecoration(hintText: "Group 'number'"),
           ),
           actions: [
             TextButton(
