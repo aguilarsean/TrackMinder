@@ -14,7 +14,7 @@ class CPE1102Lcontent extends StatefulWidget {
 
 class _CPE1102LcontentState extends State<CPE1102Lcontent> {
   TextEditingController _groupNumberController = TextEditingController();
-  TextEditingController _numCodeController = TextEditingController();
+  TextEditingController _codeController = TextEditingController();
   String idNumber = '';
   bool dataAdded = false;
 
@@ -76,9 +76,9 @@ class _CPE1102LcontentState extends State<CPE1102Lcontent> {
                   const SizedBox(height: 30),
                   reusableTextField(
                     "Enter code",
-                    Icons.numbers_outlined,
+                    Icons.code_outlined,
                     false,
-                    _numCodeController,
+                    _codeController,
                     null,
                   ),
                   const SizedBox(height: 30),
@@ -86,6 +86,28 @@ class _CPE1102LcontentState extends State<CPE1102Lcontent> {
                     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
                     String groupNumber = _groupNumberController.text;
+                    String enteredCode = _codeController.text;
+
+                    if (groupNumber.isEmpty || enteredCode.isEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Error'),
+                            content:
+                                const Text('Enter both group number and code.'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('OK'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
 
                     final currentDate = DateTime.now();
                     final formattedDate =
@@ -94,7 +116,7 @@ class _CPE1102LcontentState extends State<CPE1102Lcontent> {
 
                     final attendanceCollectionRef = firestore
                         .collection(
-                            '/courses/cpe1202L/groups/1/$collectionName')
+                            '/courses/cpe1102L/groups/$groupNumber/$collectionName')
                         .doc('data');
 
                     bool attendanceCollectionExists =
@@ -108,8 +130,8 @@ class _CPE1102LcontentState extends State<CPE1102Lcontent> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: const Text('Error'),
-                            content: const Text(
-                                'The attendance collection does not exist or is not yet created.'),
+                            content:
+                                const Text('Attendance is not yet available.'),
                             actions: <Widget>[
                               TextButton(
                                 child: const Text('OK'),
@@ -139,8 +161,9 @@ class _CPE1102LcontentState extends State<CPE1102Lcontent> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: const Text('Error'),
-                                  content: const Text('Please try again!'),
+                                  title: const Text('Attendance Marked'),
+                                  content: const Text(
+                                      'You have already been marked present.'),
                                   actions: <Widget>[
                                     TextButton(
                                       child: const Text('OK'),
@@ -153,29 +176,52 @@ class _CPE1102LcontentState extends State<CPE1102Lcontent> {
                               },
                             );
                           } else {
-                            idNumbers.add(idNumber);
-                            transaction.update(attendanceCollectionRef,
-                                {'idNumbers': idNumbers});
-                            setState(() {
-                              dataAdded = true;
-                            });
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text('Success'),
-                                  content: const Text('Attendance is Marked!'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: const Text('OK'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
+                            String generatedCode = data['code'];
+                            if (enteredCode != generatedCode) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Error'),
+                                    content:
+                                        const Text('The code is incorrect!'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('OK'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            } else {
+                              idNumbers.add(idNumber);
+                              transaction.update(attendanceCollectionRef,
+                                  {'idNumbers': idNumbers});
+                              setState(() {
+                                dataAdded = true;
+                              });
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Success'),
+                                    content:
+                                        const Text('Attendance is marked!'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('OK'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
                           }
                         } else {
                           print('Field "idNumbers" not found!');

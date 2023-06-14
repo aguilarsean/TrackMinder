@@ -88,6 +88,27 @@ class _CPE1202LcontentState extends State<CPE1202Lcontent> {
                     String groupNumber = _groupNumberController.text;
                     String enteredCode = _codeController.text;
 
+                    if (groupNumber.isEmpty || enteredCode.isEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Error'),
+                            content:
+                                const Text('Enter both group number and code.'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('OK'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+
                     final currentDate = DateTime.now();
                     final formattedDate =
                         DateFormat('MM-dd-yy').format(currentDate);
@@ -95,7 +116,7 @@ class _CPE1202LcontentState extends State<CPE1202Lcontent> {
 
                     final attendanceCollectionRef = firestore
                         .collection(
-                            '/courses/cpe1202L/groups/1/$collectionName')
+                            '/courses/cpe1202L/groups/$groupNumber/$collectionName')
                         .doc('data');
 
                     bool attendanceCollectionExists =
