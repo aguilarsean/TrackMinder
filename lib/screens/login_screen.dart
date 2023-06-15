@@ -84,9 +84,13 @@ class _LogInScreenState extends State<LogInScreen> {
               padding: EdgeInsets.fromLTRB(
                   20, MediaQuery.of(context).size.height * 0.2, 20, 0),
               child: Column(children: <Widget>[
-                logoWidget("assets/images/sa-white.png"),
+                SizedBox(
+                  width: 300,
+                  height: 100,
+                  child: Image.asset("assets/images/logo/logo.png"),
+                ),
                 const SizedBox(
-                  height: 30,
+                  height: 50,
                 ),
                 reusableTextField("Enter email", Icons.person_outline, false,
                     _emailController, null),
