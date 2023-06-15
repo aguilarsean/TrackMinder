@@ -11,6 +11,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:trackminder/content/feedback_report.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import '../content/profile_settings_content.dart';
@@ -403,10 +404,6 @@ class _ProfileContentState extends State<ProfileContent> {
     return StreamBuilder<DocumentSnapshot>(
       stream: _getUserDocumentStream(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
         User? user = FirebaseAuth.instance.currentUser;
         String idNumber = user?.displayName ?? 'No id number';
 
@@ -440,6 +437,11 @@ class _ProfileContentState extends State<ProfileContent> {
                 ),
                 const Divider(),
                 ListTile(
+                  onTap: _feedbackandreport,
+                  title: const Text('Feedback and Report'),
+                ),
+                const Divider(),
+                ListTile(
                   onTap: _logout,
                   title: const Text('Logout'),
                 ),
@@ -460,6 +462,13 @@ class _ProfileContentState extends State<ProfileContent> {
       String idNumber = user?.displayName ?? 'No id number';
       return _firestore.collection('users').doc(idNumber).snapshots();
     }
+  }
+
+  void _feedbackandreport() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const FeedbackAndReport()),
+    );
   }
 
   void _logout() async {
