@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_final_fields
+
 import 'package:flutter/material.dart';
 import 'package:trackminder/screens/main_screen.dart';
 
@@ -11,7 +13,7 @@ class GetStarted extends StatefulWidget {
 class _GetStartedState extends State<GetStarted> {
   PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
-  int _totalPages = 3;
+  int _totalPages = 4;
 
   @override
   void dispose() {
@@ -32,7 +34,6 @@ class _GetStartedState extends State<GetStarted> {
               });
             },
             children: [
-              // Page 1
               Container(
                 color: Colors.white,
                 child: const Column(
@@ -41,32 +42,66 @@ class _GetStartedState extends State<GetStarted> {
                     Icon(Icons.calendar_today, size: 80, color: Colors.blue),
                     SizedBox(height: 16),
                     Text(
-                      'Welcome to the App!',
+                      'Welcome to the TrackMinder!',
                       style:
                           TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
               ),
-              // Page 2
               Container(
                 color: Colors.white,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    const Text(
+                      'To record your attendance follow the steps below:',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 30),
                     Column(
                       children: [
-                        _buildItem(Icons.image, 'Image 1'),
+                        GestureDetector(
+                          onTap: () => _showImageDialog(
+                              context, 'assets/images/step_1.png'),
+                          child: _buildItem('assets/images/step_1.png',
+                              'First, Go to the courses'),
+                        ),
                         const SizedBox(height: 32),
-                        _buildItem(Icons.image, 'Image 2'),
+                        GestureDetector(
+                          onTap: () => _showImageDialog(
+                              context, 'assets/images/step_2.png'),
+                          child: _buildItem('assets/images/step_2.png',
+                              'Then, tap on the course\nyou want to attend'),
+                        ),
                         const SizedBox(height: 32),
-                        _buildItem(Icons.image, 'Image 3'),
+                        GestureDetector(
+                          onTap: () => _showImageDialog(
+                              context, 'assets/images/step_3.png'),
+                          child: _buildItem('assets/images/step_3.png',
+                              'Lastly, Enter your group\nnumber and code.'),
+                        ),
                       ],
                     ),
                   ],
                 ),
               ),
-              // Page 3
+              Container(
+                color: Colors.white,
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.thumb_up, size: 80, color: Colors.blue),
+                    SizedBox(height: 16),
+                    Text(
+                      'Attendance is recorded',
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
               Container(
                 color: Colors.white,
                 child: Column(
@@ -76,9 +111,9 @@ class _GetStartedState extends State<GetStarted> {
                         size: 80, color: Colors.blue),
                     const SizedBox(height: 16),
                     const Text(
-                      'Enjoy the App!',
+                      'Enjoy TrackMinder!',
                       style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 32),
                     ElevatedButton(
@@ -100,7 +135,7 @@ class _GetStartedState extends State<GetStarted> {
                       ),
                       child: const Text(
                         'Go Back to MainScreen',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 14),
                       ),
                     ),
                   ],
@@ -123,12 +158,14 @@ class _GetStartedState extends State<GetStarted> {
     );
   }
 
-  Widget _buildItem(IconData icon, String text) {
+  Widget _buildItem(String imagePath, String text) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Icon(icon, size: 40),
-        const SizedBox(height: 8),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.asset(imagePath, width: 100, height: 200),
+        ),
         Text(text, style: const TextStyle(fontSize: 16)),
       ],
     );
@@ -153,6 +190,25 @@ class _GetStartedState extends State<GetStarted> {
         shape: BoxShape.circle,
         color: isActive ? Colors.blue : Colors.grey,
       ),
+    );
+  }
+
+  void _showImageDialog(BuildContext context, String imagePath) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Image.asset(imagePath),
+            ),
+          ),
+        );
+      },
     );
   }
 }
