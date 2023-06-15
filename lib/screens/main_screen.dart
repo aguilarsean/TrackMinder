@@ -6,6 +6,7 @@ import '../content/student/student_courses_content.dart';
 import '../content/professor/professor_courses_content.dart';
 import '../content/home_content.dart';
 import 'profile_screen.dart';
+import '../utils/colors_typography.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -78,6 +79,9 @@ class _MainScreenState extends State<MainScreen> {
         },
         showSelectedLabels: false,
         showUnselectedLabels: false,
+        selectedItemColor: AppColors.primaryColor,
+        unselectedItemColor: AppColors.textColor,
+        backgroundColor: AppColors.accentColor,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
