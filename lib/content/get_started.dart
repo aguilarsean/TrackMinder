@@ -21,106 +21,104 @@ class _GetStartedState extends State<GetStarted> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Stack(
-          children: [
-            PageView(
-              controller: _pageController,
-              onPageChanged: (int page) {
-                setState(() {
-                  _currentPage = page;
-                });
-              },
-              children: [
-                // Page 1
-                Container(
-                  color: Colors.white,
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.calendar_today, size: 80, color: Colors.blue),
-                      SizedBox(height: 16),
-                      Text(
-                        'Welcome to the App!',
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
-                // Page 2
-                Container(
-                  color: Colors.white,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        children: [
-                          _buildItem(Icons.image, 'Image 1'),
-                          const SizedBox(height: 32),
-                          _buildItem(Icons.image, 'Image 2'),
-                          const SizedBox(height: 32),
-                          _buildItem(Icons.image, 'Image 3'),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                // Page 3
-                Container(
-                  color: Colors.white,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.smart_screen,
-                          size: 80, color: Colors.blue),
-                      const SizedBox(height: 16),
-                      const Text(
-                        'Enjoy the App!',
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 32),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const MainScreen(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.all(16),
-                          foregroundColor: Colors.white,
-                          backgroundColor: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: const Text(
-                          'Go Back to MainScreen',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 50.0),
-                child: Row(
+    return Scaffold(
+      body: Stack(
+        children: [
+          PageView(
+            controller: _pageController,
+            onPageChanged: (int page) {
+              setState(() {
+                _currentPage = page;
+              });
+            },
+            children: [
+              // Page 1
+              Container(
+                color: Colors.white,
+                child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: _buildPageIndicator(),
+                  children: [
+                    Icon(Icons.calendar_today, size: 80, color: Colors.blue),
+                    SizedBox(height: 16),
+                    Text(
+                      'Welcome to the App!',
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
               ),
+              // Page 2
+              Container(
+                color: Colors.white,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      children: [
+                        _buildItem(Icons.image, 'Image 1'),
+                        const SizedBox(height: 32),
+                        _buildItem(Icons.image, 'Image 2'),
+                        const SizedBox(height: 32),
+                        _buildItem(Icons.image, 'Image 3'),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              // Page 3
+              Container(
+                color: Colors.white,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.smart_screen,
+                        size: 80, color: Colors.blue),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Enjoy the App!',
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 32),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MainScreen(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(16),
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text(
+                        'Go Back to MainScreen',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 50.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: _buildPageIndicator(),
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

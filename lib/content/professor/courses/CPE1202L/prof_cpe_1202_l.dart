@@ -1,10 +1,11 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, prefer_final_fields
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../../../utils/colors_typography.dart';
 import 'Groups/group_1.dart';
 import 'Groups/group_2.dart';
 import 'Groups/group_3.dart';
@@ -52,7 +53,7 @@ class _ProfCPE1202LcontentState extends State<ProfCPE1202Lcontent> {
         isFirebaseInitialized = true;
       });
     } catch (error) {
-      print('Firebase initialization failed: $error');
+      // print('Firebase initialization failed: $error');
     }
   }
 
@@ -105,7 +106,11 @@ class _ProfCPE1202LcontentState extends State<ProfCPE1202Lcontent> {
         String newGroup = '';
         _textEditingController.text = '';
         return AlertDialog(
-          title: const Text('Enter Group Number'),
+          backgroundColor: AppColors.secondaryColor,
+          title: const Text(
+            'Enter Group Number',
+            style: TextStyle(color: AppColors.textColor),
+          ),
           content: TextFormField(
             controller: _textEditingController,
             onChanged: (value) {
@@ -120,7 +125,10 @@ class _ProfCPE1202LcontentState extends State<ProfCPE1202Lcontent> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: AppColors.textColor),
+              ),
             ),
             TextButton(
               onPressed: () async {
@@ -136,15 +144,24 @@ class _ProfCPE1202LcontentState extends State<ProfCPE1202Lcontent> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: const Text('Invalid Input'),
-                        content:
-                            const Text('Please enter a valid group number'),
+                        backgroundColor: AppColors.secondaryColor,
+                        title: const Text(
+                          'Invalid Input',
+                          style: TextStyle(color: AppColors.textColor),
+                        ),
+                        content: const Text(
+                          'Please enter a valid group number',
+                          style: TextStyle(color: AppColors.textColor),
+                        ),
                         actions: [
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: const Text('OK'),
+                            child: const Text(
+                              'OK',
+                              style: TextStyle(color: AppColors.textColor),
+                            ),
                           ),
                         ],
                       );
@@ -152,7 +169,10 @@ class _ProfCPE1202LcontentState extends State<ProfCPE1202Lcontent> {
                   );
                 }
               },
-              child: const Text('Add'),
+              child: const Text(
+                'Add',
+                style: TextStyle(color: AppColors.textColor),
+              ),
             ),
           ],
         );
@@ -165,14 +185,24 @@ class _ProfCPE1202LcontentState extends State<ProfCPE1202Lcontent> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Delete Tab'),
-          content: const Text('Are you sure you want to delete this tab?'),
+          backgroundColor: AppColors.secondaryColor,
+          title: const Text(
+            'Delete Tab',
+            style: TextStyle(color: AppColors.textColor),
+          ),
+          content: const Text(
+            'Are you sure you want to delete this tab?',
+            style: TextStyle(color: AppColors.textColor),
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: AppColors.textColor),
+              ),
             ),
             TextButton(
               onPressed: () async {
@@ -192,7 +222,10 @@ class _ProfCPE1202LcontentState extends State<ProfCPE1202Lcontent> {
                 saveTabsToFirestore();
                 Navigator.of(context).pop();
               },
-              child: const Text('Delete'),
+              child: const Text(
+                'Delete',
+                style: TextStyle(color: AppColors.textColor),
+              ),
             ),
           ],
         );
@@ -235,14 +268,24 @@ class _ProfCPE1202LcontentState extends State<ProfCPE1202Lcontent> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Error'),
-            content: Text('An error occurred: $error'),
+            backgroundColor: AppColors.secondaryColor,
+            title: const Text(
+              'Error',
+              style: TextStyle(color: AppColors.textColor),
+            ),
+            content: Text(
+              'An error occurred: $error',
+              style: const TextStyle(color: AppColors.textColor),
+            ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text('OK'),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: AppColors.textColor),
+                ),
               ),
             ],
           );
@@ -254,12 +297,20 @@ class _ProfCPE1202LcontentState extends State<ProfCPE1202Lcontent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.accentColor,
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.accentColor,
         elevation: 0,
         title: const Text(
           'Groups',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(10),
+          child: Divider(
+            color: Colors.black12,
+            thickness: 0.7,
+          ),
         ),
       ),
       resizeToAvoidBottomInset: false,
@@ -276,7 +327,10 @@ class _ProfCPE1202LcontentState extends State<ProfCPE1202Lcontent> {
                     itemBuilder: (context, index) {
                       final groupNumber = courseGroup[index];
                       return ListTile(
-                        title: Text(groupNumber),
+                        title: Text(
+                          groupNumber,
+                          style: const TextStyle(color: AppColors.textColor),
+                        ),
                         trailing: const Icon(Icons.arrow_forward),
                         onTap: () {
                           navigateToCourseContent(groupNumber);
@@ -291,8 +345,9 @@ class _ProfCPE1202LcontentState extends State<ProfCPE1202Lcontent> {
               ],
             ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.secondaryColor,
         onPressed: addTab,
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: AppColors.primaryColor),
       ),
     );
   }

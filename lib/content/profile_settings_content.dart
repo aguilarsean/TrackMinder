@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:trackminder/screens/login_screen.dart';
+import 'package:trackminder/utils/colors_typography.dart';
 
 class ProfileSettingsContent extends StatefulWidget {
   const ProfileSettingsContent({Key? key}) : super(key: key);
@@ -283,7 +284,9 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
     return GestureDetector(
       onTap: _unfocusTextFields,
       child: Scaffold(
+        backgroundColor: AppColors.accentColor,
         appBar: AppBar(
+          backgroundColor: AppColors.accentColor,
           title: const Text('Profile Settings'),
           leading: _isSnackbarVisible
               ? const IconButton(
@@ -291,6 +294,13 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
                   onPressed: null,
                 )
               : null,
+          bottom: const PreferredSize(
+            preferredSize: Size.fromHeight(10),
+            child: Divider(
+              color: Colors.black12,
+              thickness: 0.7,
+            ),
+          ),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -298,7 +308,8 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Profile Name', style: TextStyle(fontSize: 18)),
+                const Text('Profile Name',
+                    style: TextStyle(fontSize: 18, color: AppColors.textColor)),
                 Opacity(
                   opacity: _isButtonDisabled ? 0.5 : 1.0,
                   child: TextFormField(
@@ -312,12 +323,16 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
                 Opacity(
                   opacity: _isButtonDisabled ? 0.5 : 1.0,
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.secondaryColor,
+                        foregroundColor: AppColors.textColor),
                     onPressed: _updateProfileName,
                     child: const Text('Update Profile Name'),
                   ),
                 ),
                 const SizedBox(height: 32.0),
-                const Text('Email', style: TextStyle(fontSize: 18)),
+                const Text('Email',
+                    style: TextStyle(fontSize: 18, color: AppColors.textColor)),
                 const SizedBox(height: 10.0),
                 Stack(
                   children: [
@@ -330,7 +345,8 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
                           } else {
                             return Text(
                               snapshot.data ?? '',
-                              style: const TextStyle(fontSize: 16),
+                              style: const TextStyle(
+                                  fontSize: 16, color: AppColors.textColor),
                             );
                           }
                         } else {
@@ -355,7 +371,8 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
                   ],
                 ),
                 const SizedBox(height: 32.0),
-                const Text('Password', style: TextStyle(fontSize: 18)),
+                const Text('Password',
+                    style: TextStyle(fontSize: 18, color: AppColors.textColor)),
                 Opacity(
                   opacity: _isButtonDisabled ? 0.5 : 1.0,
                   child: TextFormField(
@@ -370,6 +387,9 @@ class _ProfileSettingsContentState extends State<ProfileSettingsContent> {
                 Opacity(
                   opacity: _isButtonDisabled ? 0.5 : 1.0,
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.secondaryColor,
+                        foregroundColor: AppColors.textColor),
                     onPressed: _updatePassword,
                     child: const Text('Update Password'),
                   ),

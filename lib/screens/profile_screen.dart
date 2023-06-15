@@ -12,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:trackminder/content/feedback_report.dart';
+import 'package:trackminder/utils/colors_typography.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import '../content/profile_settings_content.dart';
@@ -28,6 +29,7 @@ class _ProfileContentState extends State<ProfileContent> {
   final FirebaseStorage _storage = FirebaseStorage.instanceFor(
       bucket: dotenv.env['FIREBASE_STORAGE_BUCKET'] ?? '');
   final ImagePicker _picker = ImagePicker();
+  Color _backgroundColor = AppColors.accentColor;
 
   File? _pickedImage;
   String? _imageUrl;
@@ -401,55 +403,58 @@ class _ProfileContentState extends State<ProfileContent> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<DocumentSnapshot>(
-      stream: _getUserDocumentStream(),
-      builder: (context, snapshot) {
-        User? user = FirebaseAuth.instance.currentUser;
-        String idNumber = user?.displayName ?? 'No id number';
+    return Container(
+      color: _backgroundColor,
+      child: StreamBuilder<DocumentSnapshot>(
+        stream: _getUserDocumentStream(),
+        builder: (context, snapshot) {
+          User? user = FirebaseAuth.instance.currentUser;
+          String idNumber = user?.displayName ?? 'No id number';
 
-        return FutureBuilder<DocumentSnapshot>(
-          future: FirebaseFirestore.instance
-              .collection('users')
-              .doc(idNumber)
-              .get(),
-          builder: (context, docSnapshot) {
-            if (docSnapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
+          return FutureBuilder<DocumentSnapshot>(
+            future: FirebaseFirestore.instance
+                .collection('users')
+                .doc(idNumber)
+                .get(),
+            builder: (context, docSnapshot) {
+              if (docSnapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-            Map<String, dynamic>? data =
-                docSnapshot.data?.data() as Map<String, dynamic>?;
+              Map<String, dynamic>? data =
+                  docSnapshot.data?.data() as Map<String, dynamic>?;
 
-            String profileName = data?['profileName'] ?? '';
-            final displayName = user?.displayName;
+              String profileName = data?['profileName'] ?? '';
+              final displayName = user?.displayName;
 
-            return Column(
-              children: [
-                _buildAvatarWidget(),
-                const SizedBox(height: 20),
-                _buildProfileNameWidget(profileName),
-                _buildDisplayNameWidget(displayName!),
-                const SizedBox(height: 20),
-                const Divider(),
-                ListTile(
-                  onTap: _openProfileSettingsScreen,
-                  title: const Text('Edit Profile'),
-                ),
-                const Divider(),
-                ListTile(
-                  onTap: _feedbackandreport,
-                  title: const Text('Feedback and Report'),
-                ),
-                const Divider(),
-                ListTile(
-                  onTap: _logout,
-                  title: const Text('Logout'),
-                ),
-              ],
-            );
-          },
-        );
-      },
+              return Column(
+                children: [
+                  _buildAvatarWidget(),
+                  const SizedBox(height: 20),
+                  _buildProfileNameWidget(profileName),
+                  _buildDisplayNameWidget(displayName!),
+                  const SizedBox(height: 20),
+                  const Divider(),
+                  ListTile(
+                    onTap: _openProfileSettingsScreen,
+                    title: const Text('Edit Profile'),
+                  ),
+                  const Divider(),
+                  ListTile(
+                    onTap: _feedbackandreport,
+                    title: const Text('Feedback and Report'),
+                  ),
+                  const Divider(),
+                  ListTile(
+                    onTap: _logout,
+                    title: const Text('Logout'),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+      ),
     );
   }
 
@@ -462,6 +467,13 @@ class _ProfileContentState extends State<ProfileContent> {
       String idNumber = user?.displayName ?? 'No id number';
       return _firestore.collection('users').doc(idNumber).snapshots();
     }
+  }
+
+  void _changeBackgroundColor() {
+    setState(() {
+      _backgroundColor =
+          AppColors.accentColor; // Set the desired background color
+    });
   }
 
   void _feedbackandreport() async {

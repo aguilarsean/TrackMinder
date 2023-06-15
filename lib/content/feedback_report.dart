@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:trackminder/utils/colors_typography.dart';
 
 class FeedbackAndReport extends StatefulWidget {
   const FeedbackAndReport({Key? key}) : super(key: key);
@@ -69,10 +70,16 @@ class _FeedbackAndReportState extends State<FeedbackAndReport> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Success'),
-            content: const Text('Feedback/Report has been sent.'),
+            content: const Text(
+              'Feedback/Report has been sent.',
+              style: TextStyle(color: AppColors.textColor),
+            ),
             actions: <Widget>[
               TextButton(
-                child: const Text('OK'),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: AppColors.textColor),
+                ),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -86,11 +93,20 @@ class _FeedbackAndReportState extends State<FeedbackAndReport> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Error'),
-            content: const Text('Failed to send feedback/report.'),
+            title: const Text(
+              'Error',
+              style: TextStyle(color: AppColors.textColor),
+            ),
+            content: const Text(
+              'Failed to send feedback/report.',
+              style: TextStyle(color: AppColors.textColor),
+            ),
             actions: <Widget>[
               TextButton(
-                child: const Text('OK'),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: AppColors.textColor),
+                ),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -105,8 +121,20 @@ class _FeedbackAndReportState extends State<FeedbackAndReport> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.accentColor,
       appBar: AppBar(
-        title: const Text('Feedback and Report'),
+        backgroundColor: AppColors.accentColor,
+        title: const Text(
+          'Feedback and Report',
+          style: TextStyle(color: AppColors.textColor),
+        ),
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(10),
+          child: Divider(
+            color: Colors.black12,
+            thickness: 0.7,
+          ),
+        ),
       ),
       body: GestureDetector(
         onTap: _unfocusTextFields,
@@ -146,6 +174,9 @@ class _FeedbackAndReportState extends State<FeedbackAndReport> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.secondaryColor,
+                      foregroundColor: AppColors.textColor),
                   onPressed: () {
                     sendEmail(
                       name: _nameController.text,

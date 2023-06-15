@@ -62,11 +62,22 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.accentColor,
         elevation: 0,
         title: Text(
           _screenTitles[_currentIndex],
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textColor,
+          ),
+        ),
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(10),
+          child: Divider(
+            color: Colors.black12,
+            thickness: 0.7,
+          ),
         ),
       ),
       body: _screens[_currentIndex],

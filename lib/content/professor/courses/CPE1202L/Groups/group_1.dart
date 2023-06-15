@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, use_key_in_widget_constructors
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
+
+import '../../../../../utils/colors_typography.dart';
 
 class Group1Content extends StatefulWidget {
   @override
@@ -74,14 +76,24 @@ class _Group1ContentState extends State<Group1Content> {
         context: context,
         builder: (BuildContext dialogContext) {
           return AlertDialog(
-            title: const Text('Error'),
-            content: Text('An error occurred while loading tabs: $error'),
+            backgroundColor: AppColors.secondaryColor,
+            title: const Text(
+              'Error',
+              style: TextStyle(color: AppColors.textColor),
+            ),
+            content: Text(
+              'An error occurred while loading tabs: $error',
+              style: const TextStyle(color: AppColors.textColor),
+            ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(dialogContext).pop();
                 },
-                child: const Text('OK'),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: AppColors.textColor),
+                ),
               ),
             ],
           );
@@ -116,15 +128,24 @@ class _Group1ContentState extends State<Group1Content> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Attendance Deleted'),
-            content:
-                const Text('The attendance and its data have been deleted.'),
+            backgroundColor: AppColors.secondaryColor,
+            title: const Text(
+              'Attendance Deleted',
+              style: TextStyle(color: AppColors.textColor),
+            ),
+            content: const Text(
+              'The attendance and its data have been deleted.',
+              style: TextStyle(color: AppColors.textColor),
+            ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text('OK'),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: AppColors.textColor),
+                ),
               ),
             ],
           );
@@ -135,14 +156,24 @@ class _Group1ContentState extends State<Group1Content> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Error'),
-            content: Text('An error occurred while deleting the tab: $error'),
+            backgroundColor: AppColors.secondaryColor,
+            title: const Text(
+              'Error',
+              style: TextStyle(color: AppColors.textColor),
+            ),
+            content: Text(
+              'An error occurred while deleting the tab: $error',
+              style: const TextStyle(color: AppColors.textColor),
+            ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text('OK'),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: AppColors.textColor),
+                ),
               ),
             ],
           );
@@ -154,12 +185,23 @@ class _Group1ContentState extends State<Group1Content> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.accentColor,
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.accentColor,
         elevation: 0,
         title: const Text(
           "Group 1",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textColor),
+        ),
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(10),
+          child: Divider(
+            color: Colors.black12,
+            thickness: 0.7,
+          ),
         ),
       ),
       body: Column(
@@ -170,17 +212,29 @@ class _Group1ContentState extends State<Group1Content> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.secondaryColor,
+                      foregroundColor: AppColors.textColor),
                   onPressed: () {
                     openAttendance(context);
                   },
-                  child: const Text('Open'),
+                  child: const Text(
+                    'Open',
+                    style: TextStyle(color: AppColors.textColor),
+                  ),
                 ),
                 const SizedBox(width: 16),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.secondaryColor,
+                      foregroundColor: AppColors.textColor),
                   onPressed: () {
                     closeAttendance(context);
                   },
-                  child: const Text('Close'),
+                  child: const Text(
+                    'Close',
+                    style: TextStyle(color: AppColors.textColor),
+                  ),
                 ),
               ],
             ),
@@ -196,11 +250,12 @@ class _Group1ContentState extends State<Group1Content> {
                     child: Text(
                       'Logs',
                       style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textColor),
                     ),
                   ),
+                  const Divider(),
                   Expanded(
                     child: isRefreshing && isLoading
                         ? const Center(
@@ -221,22 +276,39 @@ class _Group1ContentState extends State<Group1Content> {
                                       context: context,
                                       builder: (BuildContext context) {
                                         return AlertDialog(
-                                          title: const Text('Delete Tab'),
+                                          backgroundColor:
+                                              AppColors.secondaryColor,
+                                          title: const Text(
+                                            'Delete Tab',
+                                            style: TextStyle(
+                                                color: AppColors.textColor),
+                                          ),
                                           content: const Text(
-                                              'Are you sure you want to delete this tab?'),
+                                            'Are you sure you want to delete this tab?',
+                                            style: TextStyle(
+                                                color: AppColors.textColor),
+                                          ),
                                           actions: [
                                             TextButton(
                                               onPressed: () {
                                                 Navigator.of(context).pop();
                                               },
-                                              child: const Text('Cancel'),
+                                              child: const Text(
+                                                'Cancel',
+                                                style: TextStyle(
+                                                    color: AppColors.textColor),
+                                              ),
                                             ),
                                             TextButton(
                                               onPressed: () {
                                                 Navigator.of(context).pop();
                                                 deleteTab(tabName);
                                               },
-                                              child: const Text('Delete'),
+                                              child: const Text(
+                                                'Delete',
+                                                style: TextStyle(
+                                                    color: AppColors.textColor),
+                                              ),
                                             ),
                                           ],
                                         );
@@ -262,7 +334,11 @@ class _Group1ContentState extends State<Group1Content> {
                                       onTap: () {
                                         openTabScreen(tabName);
                                       },
-                                      title: Text(tabName),
+                                      title: Text(
+                                        tabName,
+                                        style: const TextStyle(
+                                            color: AppColors.textColor),
+                                      ),
                                       trailing: const Icon(Icons.arrow_forward),
                                     ),
                                   ),
@@ -281,7 +357,6 @@ class _Group1ContentState extends State<Group1Content> {
   }
 
   void openTabScreen(String tabName) {
-    // Use the Navigator to navigate to a new screen
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -295,9 +370,6 @@ class _Group1ContentState extends State<Group1Content> {
       final currentDate = DateTime.now();
       final formattedDate = DateFormat('MM-dd-yy').format(currentDate);
       final collectionName = 'attendance_$formattedDate';
-
-      print(collectionName);
-      print('stored: $storedCollectionName');
 
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
       final newCollectionRef =
@@ -336,30 +408,38 @@ class _Group1ContentState extends State<Group1Content> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Code Generated'),
+            backgroundColor: AppColors.secondaryColor,
+            title: const Text(
+              'Code Generated',
+              style: TextStyle(color: AppColors.textColor),
+            ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Share the code with your students:\n$code'),
+                Text(
+                  'Share the code with your students:\n$code',
+                  style: const TextStyle(color: AppColors.textColor),
+                ),
               ],
             ),
             actions: [
               ElevatedButton(
                 onPressed: () {
                   Clipboard.setData(ClipboardData(text: code));
-                  // ScaffoldMessenger.of(context).showSnackBar(
-                  //   const SnackBar(
-                  //     content: Text('Code copied to clipboard'),
-                  //   ),
-                  // );
                 },
-                child: const Text('Share'),
+                child: const Text(
+                  'Share',
+                  style: TextStyle(color: AppColors.textColor),
+                ),
               ),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text('OK'),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: AppColors.textColor),
+                ),
               ),
             ],
           );
@@ -370,14 +450,24 @@ class _Group1ContentState extends State<Group1Content> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Open'),
-            content: const Text('Attendance is now open and available.'),
+            backgroundColor: AppColors.secondaryColor,
+            title: const Text(
+              'Open',
+              style: TextStyle(color: AppColors.textColor),
+            ),
+            content: const Text(
+              'Attendance is now open and available.',
+              style: TextStyle(color: AppColors.textColor),
+            ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text('OK'),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: AppColors.textColor),
+                ),
               ),
             ],
           );
@@ -388,14 +478,24 @@ class _Group1ContentState extends State<Group1Content> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Error'),
-            content: Text('An error occurred: $error'),
+            backgroundColor: AppColors.secondaryColor,
+            title: const Text(
+              'Error',
+              style: TextStyle(color: AppColors.textColor),
+            ),
+            content: Text(
+              'An error occurred: $error',
+              style: const TextStyle(color: AppColors.textColor),
+            ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text('OK'),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: AppColors.textColor),
+                ),
               ),
             ],
           );
@@ -424,14 +524,24 @@ void closeAttendance(BuildContext context) async {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Confirmation'),
-          content: const Text('Are you sure you want to close the attendance?'),
+          backgroundColor: AppColors.secondaryColor,
+          title: const Text(
+            'Confirmation',
+            style: TextStyle(color: AppColors.textColor),
+          ),
+          content: const Text(
+            'Are you sure you want to close the attendance?',
+            style: TextStyle(color: AppColors.textColor),
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('No'),
+              child: const Text(
+                'No',
+                style: TextStyle(color: AppColors.textColor),
+              ),
             ),
             TextButton(
               onPressed: () async {
@@ -449,15 +559,24 @@ void closeAttendance(BuildContext context) async {
                     context: confirmationContext,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: const Text('Closed'),
+                        backgroundColor: AppColors.secondaryColor,
+                        title: const Text(
+                          'Closed',
+                          style: TextStyle(color: AppColors.textColor),
+                        ),
                         content: const Text(
-                            'Attendance is now closed and unavailable.'),
+                          'Attendance is now closed and unavailable.',
+                          style: TextStyle(color: AppColors.textColor),
+                        ),
                         actions: [
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: const Text('OK'),
+                            child: const Text(
+                              'OK',
+                              style: TextStyle(color: AppColors.textColor),
+                            ),
                           ),
                         ],
                       );
@@ -468,14 +587,24 @@ void closeAttendance(BuildContext context) async {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: const Text('Error'),
-                        content: const Text('Failed to retrieve current data.'),
+                        backgroundColor: AppColors.secondaryColor,
+                        title: const Text(
+                          'Error',
+                          style: TextStyle(color: AppColors.textColor),
+                        ),
+                        content: const Text(
+                          'Failed to retrieve current data.',
+                          style: TextStyle(color: AppColors.textColor),
+                        ),
                         actions: [
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: const Text('OK'),
+                            child: const Text(
+                              'OK',
+                              style: TextStyle(color: AppColors.textColor),
+                            ),
                           ),
                         ],
                       );
@@ -483,7 +612,10 @@ void closeAttendance(BuildContext context) async {
                   );
                 }
               },
-              child: const Text('Yes'),
+              child: const Text(
+                'Yes',
+                style: TextStyle(color: AppColors.textColor),
+              ),
             ),
           ],
         );
@@ -494,14 +626,24 @@ void closeAttendance(BuildContext context) async {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Error'),
-          content: Text('An error occurred: $error'),
+          backgroundColor: AppColors.secondaryColor,
+          title: const Text(
+            'Error',
+            style: TextStyle(color: AppColors.textColor),
+          ),
+          content: Text(
+            'An error occurred: $error',
+            style: const TextStyle(color: AppColors.textColor),
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('OK'),
+              child: const Text(
+                'OK',
+                style: TextStyle(color: AppColors.textColor),
+              ),
             ),
           ],
         );
@@ -544,9 +686,17 @@ class TabScreen extends StatelessWidget {
               },
             );
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(
+                child: Text(
+              'Error: ${snapshot.error}',
+              style: const TextStyle(color: AppColors.textColor),
+            ));
           } else {
-            return const Center(child: Text('No data available.'));
+            return const Center(
+                child: Text(
+              'No data available.',
+              style: TextStyle(color: AppColors.textColor),
+            ));
           }
         },
       ),

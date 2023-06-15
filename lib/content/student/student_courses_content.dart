@@ -1,8 +1,11 @@
+// ignore_for_file: prefer_final_fields
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../utils/colors_typography.dart';
 import 'courses/cpe_1102_l.dart';
 import 'courses/cpe_1202_l.dart';
 
@@ -49,7 +52,7 @@ class _StudentCoursesContentState extends State<StudentCoursesContent> {
         isFirebaseInitialized = true;
       });
     } catch (error) {
-      print('Firebase initialization failed: $error');
+      // print('Firebase initialization failed: $error');
     }
   }
 
@@ -105,7 +108,11 @@ class _StudentCoursesContentState extends State<StudentCoursesContent> {
         String newCode = '';
         _textEditingController.text = '';
         return AlertDialog(
-          title: const Text('Enter Course Code'),
+          backgroundColor: AppColors.secondaryColor,
+          title: const Text(
+            'Enter Course Code',
+            style: TextStyle(color: AppColors.textColor),
+          ),
           content: TextFormField(
             controller: _textEditingController,
             onChanged: (value) {
@@ -119,7 +126,10 @@ class _StudentCoursesContentState extends State<StudentCoursesContent> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: AppColors.textColor),
+              ),
             ),
             TextButton(
               onPressed: () {
@@ -135,15 +145,24 @@ class _StudentCoursesContentState extends State<StudentCoursesContent> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: const Text('Invalid Input'),
+                        backgroundColor: AppColors.secondaryColor,
+                        title: const Text(
+                          'Invalid Input',
+                          style: TextStyle(color: AppColors.textColor),
+                        ),
                         content: const Text(
-                            'Please enter a valid course code \n(use uppercase letters)'),
+                          'Please enter a valid course code \n(use uppercase letters)',
+                          style: TextStyle(color: AppColors.textColor),
+                        ),
                         actions: [
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: const Text('OK'),
+                            child: const Text(
+                              'OK',
+                              style: TextStyle(color: AppColors.textColor),
+                            ),
                           ),
                         ],
                       );
@@ -164,14 +183,24 @@ class _StudentCoursesContentState extends State<StudentCoursesContent> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Delete Tab'),
-          content: const Text('Are you sure you want to delete this tab?'),
+          backgroundColor: AppColors.secondaryColor,
+          title: const Text(
+            'Delete Tab',
+            style: TextStyle(color: AppColors.textColor),
+          ),
+          content: const Text(
+            'Are you sure you want to delete this tab?',
+            style: TextStyle(color: AppColors.textColor),
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: AppColors.textColor),
+              ),
             ),
             TextButton(
               onPressed: () {
@@ -181,7 +210,10 @@ class _StudentCoursesContentState extends State<StudentCoursesContent> {
                 saveTabsToFirestore();
                 Navigator.of(context).pop();
               },
-              child: const Text('Delete'),
+              child: const Text(
+                'Delete',
+                style: TextStyle(color: AppColors.textColor),
+              ),
             ),
           ],
         );
@@ -207,6 +239,7 @@ class _StudentCoursesContentState extends State<StudentCoursesContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.accentColor,
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       body: isLoading
@@ -236,8 +269,9 @@ class _StudentCoursesContentState extends State<StudentCoursesContent> {
               ],
             ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.secondaryColor,
         onPressed: addTab,
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: AppColors.primaryColor),
       ),
     );
   }

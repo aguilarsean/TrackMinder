@@ -73,9 +73,11 @@ class _HomeContentState extends State<HomeContent> {
 
     await saveUserDataToSharedPrefs(uid, idNumber, profileName);
 
-    setState(() {
-      welcomeMessage = 'Welcome $profileName';
-    });
+    if (mounted) {
+      setState(() {
+        welcomeMessage = 'Welcome $profileName';
+      });
+    }
   }
 
   Future<void> fetchUserDataFromSharedPrefs() async {
@@ -122,6 +124,7 @@ class _HomeContentState extends State<HomeContent> {
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
+                    color: AppColors.textColor,
                   ),
                 ),
               ),
@@ -129,9 +132,8 @@ class _HomeContentState extends State<HomeContent> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   greeting,
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
+                  style:
+                      const TextStyle(fontSize: 16, color: AppColors.textColor),
                 ),
               ),
               const SizedBox(height: 30),
@@ -183,7 +185,7 @@ class _HomeContentState extends State<HomeContent> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: _currentImageIndex == index
-                          ? Colors.blueAccent
+                          ? AppColors.primaryColor
                           : Colors.grey,
                     ),
                   );
@@ -209,7 +211,7 @@ class _HomeContentState extends State<HomeContent> {
                         },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.all(16),
-                          backgroundColor: Colors.white.withOpacity(0.95),
+                          backgroundColor: AppColors.secondaryColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -217,10 +219,11 @@ class _HomeContentState extends State<HomeContent> {
                         child: const Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.rocket, size: 40, color: Colors.green),
+                            Icon(Icons.rocket,
+                                size: 40, color: AppColors.primaryColor),
                             SizedBox(height: 10),
                             Text('Get Started',
-                                style: TextStyle(color: Colors.green)),
+                                style: TextStyle(color: AppColors.textColor)),
                           ],
                         ),
                       ),
@@ -236,8 +239,7 @@ class _HomeContentState extends State<HomeContent> {
                                 onPressed: () {},
                                 style: ElevatedButton.styleFrom(
                                   padding: const EdgeInsets.all(16),
-                                  backgroundColor:
-                                      Colors.white.withOpacity(0.95),
+                                  backgroundColor: AppColors.secondaryColor,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -246,10 +248,12 @@ class _HomeContentState extends State<HomeContent> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(Icons.dashboard,
-                                        size: 40, color: Colors.green),
+                                        size: 40,
+                                        color: AppColors.primaryColor),
                                     SizedBox(height: 10),
                                     Text('Dashboard',
-                                        style: TextStyle(color: Colors.green)),
+                                        style: TextStyle(
+                                            color: AppColors.textColor)),
                                   ],
                                 ),
                               ),
