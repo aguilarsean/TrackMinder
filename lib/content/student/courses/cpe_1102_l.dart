@@ -107,77 +107,78 @@ class _CPE1102LcontentState extends State<CPE1102Lcontent> {
                           );
                         },
                       );
-                    }
-
-                    final currentDate = DateTime.now();
-                    final formattedDate =
-                        DateFormat('MM-dd-yy').format(currentDate);
-                    final collectionName = 'attendance_$formattedDate';
-
-                    final attendanceCollectionRef = firestore
-                        .collection(
-                            '/courses/cpe1102L/groups/$groupNumber/$collectionName')
-                        .doc('data');
-
-                    bool attendanceCollectionExists =
-                        await attendanceCollectionRef
-                            .get()
-                            .then((snapshot) => snapshot.exists);
-
-                    if (!attendanceCollectionExists) {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Error'),
-                            content:
-                                const Text('Attendance is not yet available.'),
-                            actions: <Widget>[
-                              TextButton(
-                                child: const Text('OK'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
                       return;
-                    }
+                    } else {
+                      final currentDate = DateTime.now();
+                      final formattedDate =
+                          DateFormat('MM-dd-yy').format(currentDate);
+                      final collectionName = 'attendance_$formattedDate';
 
-                    firestore.runTransaction((transaction) async {
-                      DocumentSnapshot groupSnapshot =
-                          await transaction.get(attendanceCollectionRef);
+                      final attendanceCollectionRef = firestore
+                          .collection(
+                              '/courses/cpe1102L/groups/$groupNumber/$collectionName')
+                          .doc('data');
 
-                      if (groupSnapshot.exists) {
-                        Map<String, dynamic>? data =
-                            groupSnapshot.data() as Map<String, dynamic>?;
-                        if (data != null && data.containsKey('idNumbers')) {
-                          List<String> idNumbers =
-                              List<String>.from(data['idNumbers']!);
-                          if (idNumbers.contains(idNumber)) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text('Attendance Marked'),
-                                  content: const Text(
-                                      'You have already been marked present.'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: const Text('OK'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
+                      bool attendanceCollectionExists =
+                          await attendanceCollectionRef
+                              .get()
+                              .then((snapshot) => snapshot.exists);
+
+                      if (!attendanceCollectionExists) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Error'),
+                              content: const Text(
+                                  'Attendance is not yet available.'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
                             );
-                          } else {
-                            String generatedCode = data['code'];
-                            if (enteredCode != generatedCode) {
+                          },
+                        );
+                        return;
+                      } else {
+                        firestore.runTransaction((transaction) async {
+                          DocumentSnapshot groupSnapshot =
+                              await transaction.get(attendanceCollectionRef);
+
+                          if (groupSnapshot.exists) {
+                            Map<String, dynamic>? data =
+                                groupSnapshot.data() as Map<String, dynamic>?;
+
+                            List<String> idNumbers =
+                                List<String>.from(data?['idNumbers']!);
+                            bool available = data?['available'] ?? false;
+                            String generatedCode = data?['code'] ?? '';
+
+                            if (!available) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Closed'),
+                                    content:
+                                        const Text('Attendance is now closed.'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('OK'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                              return;
+                            } else if (enteredCode != generatedCode) {
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -197,45 +198,66 @@ class _CPE1102LcontentState extends State<CPE1102Lcontent> {
                                 },
                               );
                             } else {
-                              idNumbers.add(idNumber);
-                              transaction.update(attendanceCollectionRef,
-                                  {'idNumbers': idNumbers});
-                              setState(() {
-                                dataAdded = true;
-                              });
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text('Success'),
-                                    content:
-                                        const Text('Attendance is marked!'),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: const Text('OK'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
+                              if (data != null &&
+                                  data.containsKey('idNumbers')) {
+                                if (idNumbers.contains(idNumber)) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Attendance Marked'),
+                                        content: const Text(
+                                            'You have already been marked present.'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: const Text('OK'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
                                   );
-                                },
-                              );
+                                } else {
+                                  idNumbers.add(idNumber);
+                                  transaction.update(attendanceCollectionRef,
+                                      {'idNumbers': idNumbers});
+                                  setState(() {
+                                    dataAdded = true;
+                                  });
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Success'),
+                                        content:
+                                            const Text('Attendance is marked!'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: const Text('OK'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              }
                             }
                           }
-                        } else {
-                          print('Field "idNumbers" not found!');
-                        }
-                      } else {
-                        print('Group number $groupNumber does not exist!');
+                        }).then((_) async {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          await prefs.setString('idNumber', idNumber);
+                        }).catchError((error, stackTrace) {
+                          // print('Error: $error');
+                          // print('Stack trace: $stackTrace');
+                        });
                       }
-                    }).then((_) async {
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      await prefs.setString('idNumber', idNumber);
-                    }).catchError((error) {
-                      print('Failed to update data in Firestore: $error');
-                    });
+                    }
                   }),
                 ],
               ),
