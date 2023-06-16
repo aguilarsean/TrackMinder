@@ -4,7 +4,7 @@ TrackMinder is an attendance management app designed specifically for Computer E
 
 ## Features
 
-- **Effortless Attendance Tracking:** TrackMinder simplifies attendance management by allowing professors to mark attendance directly through the app. Students can easily view their attendance records and stay updated on their attendance status.
+- **Effortless Attendance Tracking:** TrackMinder simplifies attendance management by providing students with the convenience of marking their own attendance. Students can effortlessly encode their group number and the unique code provided by the professor to record their presence. Professors have the flexibility to open and close the attendance session as needed, and they can conveniently access a list of students who attended the class.
 
 - **Multiple Platform Support:** TrackMinder is available on Android and web platforms, ensuring accessibility for both students and professors. Coming soon, the iOS version will extend the app's reach to a broader user base.
 
@@ -25,3 +25,22 @@ To get started with TrackMinder, follow these steps:
 Make sure you have Flutter installed on your development environment before proceeding with the installation.
 
 Happy Coding!
+
+## App Screenshots
+
+version 1.0
+
+Log In & Sign Up
+| ![Log In]('assets/images/screenshots/ss1.png') | ![Sign Up]('assets/images/screenshots/ss2.png') |
+
+Home & Profile
+| ![Home]('assets/images/screenshots/ss3.png') | ![Profile]('assets/images/screenshots/ss4.png') |
+
+Student & Professor Home
+| ![Professor Home]('assets/images/screenshots/ss3.png') | ![Student Home]('assets/images/screenshots/ss8.png') |
+
+Student Courses & Attendance
+| ![Courses]('assets/images/screenshots/ss5.png') | ![Attendance]('assets/images/screenshots/ss7.png') |
+
+Professor Courses & Attendance
+| ![Courses]('assets/images/screenshots/ss3.png') | ![Attendance]('assets/images/screenshots/ss6.png') |
