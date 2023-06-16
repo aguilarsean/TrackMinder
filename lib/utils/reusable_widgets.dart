@@ -1,14 +1,5 @@
 import 'package:flutter/material.dart';
-
-Image logoWidget(String imageName) {
-  return Image.asset(
-    imageName,
-    fit: BoxFit.fitWidth,
-    width: 200,
-    height: 200,
-    color: Colors.white,
-  );
-}
+import 'package:trackminder/utils/colors_typography.dart';
 
 FormField<String> reusableTextField(
   String text,
@@ -56,7 +47,7 @@ Container authButtons(BuildContext context, String title, Function onTap) {
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith((states) {
             if (states.contains(MaterialState.pressed)) {
-              return Colors.black26;
+              return AppColors.textColor;
             }
             return Colors.white;
           }),
@@ -65,7 +56,9 @@ Container authButtons(BuildContext context, String title, Function onTap) {
       child: Text(
         title,
         style: const TextStyle(
-            color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16),
+            color: AppColors.textColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 16),
       ),
     ),
   );

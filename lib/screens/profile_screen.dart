@@ -29,7 +29,7 @@ class _ProfileContentState extends State<ProfileContent> {
   final FirebaseStorage _storage = FirebaseStorage.instanceFor(
       bucket: dotenv.env['FIREBASE_STORAGE_BUCKET'] ?? '');
   final ImagePicker _picker = ImagePicker();
-  Color _backgroundColor = AppColors.accentColor;
+  final Color _backgroundColor = AppColors.accentColor;
 
   File? _pickedImage;
   String? _imageUrl;
@@ -62,9 +62,8 @@ class _ProfileContentState extends State<ProfileContent> {
           _isImageLoading = false;
         });
       }
-      print(_imageUrl);
     } catch (error) {
-      print('Error loading profile image URL: $error');
+      // print('Error loading profile image URL: $error');
     }
   }
 
@@ -77,16 +76,19 @@ class _ProfileContentState extends State<ProfileContent> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ListTile(
-                leading: const Icon(Icons.photo_library),
-                title: const Text('Change Profile Picture'),
+                leading:
+                    const Icon(Icons.photo_library, color: AppColors.textColor),
+                title: const Text('Change Profile Picture',
+                    style: TextStyle(color: AppColors.textColor)),
                 onTap: () {
                   Navigator.pop(context);
                   _showImagePickerOptions();
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.delete),
-                title: const Text('Remove Profile Picture'),
+                leading: const Icon(Icons.delete, color: Colors.red),
+                title: const Text('Remove Profile Picture',
+                    style: TextStyle(color: Colors.red)),
                 onTap: () {
                   Navigator.pop(context);
                   _removeProfilePicture();
@@ -108,16 +110,20 @@ class _ProfileContentState extends State<ProfileContent> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ListTile(
-                leading: const Icon(Icons.photo_library),
-                title: const Text('Choose from Gallery'),
+                leading:
+                    const Icon(Icons.photo_library, color: AppColors.textColor),
+                title: const Text('Choose from Gallery',
+                    style: TextStyle(color: AppColors.textColor)),
                 onTap: () {
                   Navigator.pop(context);
                   _pickImage();
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.camera_alt),
-                title: const Text('Take a Photo'),
+                leading:
+                    const Icon(Icons.camera_alt, color: AppColors.textColor),
+                title: const Text('Take a Photo',
+                    style: TextStyle(color: AppColors.textColor)),
                 onTap: () {
                   Navigator.pop(context);
                   _pickImageFromCamera();
@@ -174,7 +180,6 @@ class _ProfileContentState extends State<ProfileContent> {
 
       final compressedImage = await compressFile(_pickedImage!);
       if (compressedImage == null) {
-        print('Error compressing image');
         return;
       }
 
@@ -192,7 +197,7 @@ class _ProfileContentState extends State<ProfileContent> {
 
       await _storeImageUrl(userId, imageUrl);
     } catch (error) {
-      print('Error uploading image: $error');
+      // print('Error uploading image: $error');
     }
   }
 
@@ -215,7 +220,7 @@ class _ProfileContentState extends State<ProfileContent> {
           .doc(userId)
           .update({'profilePicture': imageUrl});
     } catch (error) {
-      print('Error storing image URL: $error');
+      // print('Error storing image URL: $error');
     }
   }
 
@@ -241,7 +246,7 @@ class _ProfileContentState extends State<ProfileContent> {
         _pickedImage = null;
       });
     } catch (error) {
-      print('Error removing profile picture: $error');
+      // print('Error removing profile picture: $error');
     }
   }
 
@@ -260,6 +265,7 @@ class _ProfileContentState extends State<ProfileContent> {
         return WillPopScope(
           onWillPop: () async => false,
           child: const AlertDialog(
+            backgroundColor: AppColors.secondaryColor,
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -268,9 +274,9 @@ class _ProfileContentState extends State<ProfileContent> {
                 Text(
                   'Changing profile picture...',
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0,
-                  ),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                      color: AppColors.textColor),
                 ),
               ],
             ),
@@ -294,8 +300,8 @@ class _ProfileContentState extends State<ProfileContent> {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: Colors.black87,
-              width: 1.0,
+              color: AppColors.textColor,
+              width: 1.5,
             ),
             color: Colors.transparent,
           ),
@@ -320,7 +326,8 @@ class _ProfileContentState extends State<ProfileContent> {
                 ),
               if (_imageUrl == null && _pickedImage == null)
                 const Center(
-                  child: Icon(Icons.person, size: 50),
+                  child:
+                      Icon(Icons.person, size: 50, color: AppColors.textColor),
                 ),
               if (_imageUrl != null && _pickedImage == null)
                 CircleAvatar(
@@ -339,7 +346,8 @@ class _ProfileContentState extends State<ProfileContent> {
                 const Positioned.fill(
                   child: Center(
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(AppColors.textColor),
                       backgroundColor: Colors.transparent,
                     ),
                   ),
@@ -353,7 +361,7 @@ class _ProfileContentState extends State<ProfileContent> {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(
-            color: Colors.black87,
+            color: AppColors.textColor,
             width: 1.0,
           ),
           color: Colors.transparent,
@@ -366,7 +374,7 @@ class _ProfileContentState extends State<ProfileContent> {
           children: [
             if (_imageUrl == null)
               const Center(
-                child: Icon(Icons.person, size: 50),
+                child: Icon(Icons.person, size: 50, color: AppColors.textColor),
               ),
             if (_imageUrl != null)
               CircleAvatar(
@@ -390,14 +398,14 @@ class _ProfileContentState extends State<ProfileContent> {
   Widget _buildProfileNameWidget(String profileName) {
     return Text(
       profileName,
-      style: const TextStyle(fontSize: 20),
+      style: const TextStyle(fontSize: 20, color: AppColors.textColor),
     );
   }
 
   Widget _buildDisplayNameWidget(String displayName) {
     return Text(
       displayName,
-      style: const TextStyle(fontSize: 14),
+      style: const TextStyle(fontSize: 14, color: AppColors.textColor),
     );
   }
 
@@ -437,17 +445,20 @@ class _ProfileContentState extends State<ProfileContent> {
                   const Divider(),
                   ListTile(
                     onTap: _openProfileSettingsScreen,
-                    title: const Text('Edit Profile'),
+                    title: const Text('Edit Profile',
+                        style: TextStyle(color: AppColors.textColor)),
                   ),
                   const Divider(),
                   ListTile(
                     onTap: _feedbackandreport,
-                    title: const Text('Feedback and Report'),
+                    title: const Text('Feedback and Report',
+                        style: TextStyle(color: AppColors.textColor)),
                   ),
                   const Divider(),
                   ListTile(
                     onTap: _logout,
-                    title: const Text('Logout'),
+                    title: const Text('Logout',
+                        style: TextStyle(color: AppColors.textColor)),
                   ),
                 ],
               );
@@ -467,13 +478,6 @@ class _ProfileContentState extends State<ProfileContent> {
       String idNumber = user?.displayName ?? 'No id number';
       return _firestore.collection('users').doc(idNumber).snapshots();
     }
-  }
-
-  void _changeBackgroundColor() {
-    setState(() {
-      _backgroundColor =
-          AppColors.accentColor; // Set the desired background color
-    });
   }
 
   void _feedbackandreport() async {

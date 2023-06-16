@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, prefer_final_fields
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../utils/color_utils.dart';
 import '../../../../utils/reusable_widgets.dart';
+import '../../../utils/colors_typography.dart';
 
 class CPE1102Lcontent extends StatefulWidget {
   @override
@@ -46,7 +47,10 @@ class _CPE1102LcontentState extends State<CPE1102Lcontent> {
         elevation: 0,
         title: const Text(
           "CPE1102L",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textColor),
         ),
       ),
       body: GestureDetector(
@@ -93,12 +97,17 @@ class _CPE1102LcontentState extends State<CPE1102Lcontent> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: const Text('Error'),
-                            content:
-                                const Text('Enter both group number and code.'),
+                            backgroundColor: AppColors.secondaryColor,
+                            title: const Text('Error',
+                                style: TextStyle(color: AppColors.textColor)),
+                            content: const Text(
+                                'Enter both group number and code.',
+                                style: TextStyle(color: AppColors.textColor)),
                             actions: <Widget>[
                               TextButton(
-                                child: const Text('OK'),
+                                child: const Text('OK',
+                                    style:
+                                        TextStyle(color: AppColors.textColor)),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
@@ -129,12 +138,17 @@ class _CPE1102LcontentState extends State<CPE1102Lcontent> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: const Text('Error'),
+                              backgroundColor: AppColors.secondaryColor,
+                              title: const Text('Error',
+                                  style: TextStyle(color: AppColors.textColor)),
                               content: const Text(
-                                  'Attendance is not yet available.'),
+                                  'Attendance is not yet available.',
+                                  style: TextStyle(color: AppColors.textColor)),
                               actions: <Widget>[
                                 TextButton(
-                                  child: const Text('OK'),
+                                  child: const Text('OK',
+                                      style: TextStyle(
+                                          color: AppColors.textColor)),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
@@ -163,12 +177,19 @@ class _CPE1102LcontentState extends State<CPE1102Lcontent> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: const Text('Closed'),
-                                    content:
-                                        const Text('Attendance is now closed.'),
+                                    backgroundColor: AppColors.secondaryColor,
+                                    title: const Text('Closed',
+                                        style: TextStyle(
+                                            color: AppColors.textColor)),
+                                    content: const Text(
+                                        'Attendance is now closed.',
+                                        style: TextStyle(
+                                            color: AppColors.textColor)),
                                     actions: <Widget>[
                                       TextButton(
-                                        child: const Text('OK'),
+                                        child: const Text('OK',
+                                            style: TextStyle(
+                                                color: AppColors.textColor)),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
@@ -183,12 +204,19 @@ class _CPE1102LcontentState extends State<CPE1102Lcontent> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: const Text('Error'),
-                                    content:
-                                        const Text('The code is incorrect!'),
+                                    backgroundColor: AppColors.secondaryColor,
+                                    title: const Text('Error',
+                                        style: TextStyle(
+                                            color: AppColors.textColor)),
+                                    content: const Text(
+                                        'The code is incorrect!',
+                                        style: TextStyle(
+                                            color: AppColors.textColor)),
                                     actions: <Widget>[
                                       TextButton(
-                                        child: const Text('OK'),
+                                        child: const Text('OK',
+                                            style: TextStyle(
+                                                color: AppColors.textColor)),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
@@ -205,12 +233,21 @@ class _CPE1102LcontentState extends State<CPE1102Lcontent> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: const Text('Attendance Marked'),
+                                        backgroundColor:
+                                            AppColors.secondaryColor,
+                                        title: const Text('Attendance Marked',
+                                            style: TextStyle(
+                                                color: AppColors.textColor)),
                                         content: const Text(
-                                            'You have already been marked present.'),
+                                            'You have already been marked present.',
+                                            style: TextStyle(
+                                                color: AppColors.textColor)),
                                         actions: <Widget>[
                                           TextButton(
-                                            child: const Text('OK'),
+                                            child: const Text('OK',
+                                                style: TextStyle(
+                                                    color:
+                                                        AppColors.textColor)),
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             },
@@ -230,12 +267,21 @@ class _CPE1102LcontentState extends State<CPE1102Lcontent> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: const Text('Success'),
-                                        content:
-                                            const Text('Attendance is marked!'),
+                                        backgroundColor:
+                                            AppColors.secondaryColor,
+                                        title: const Text('Success',
+                                            style: TextStyle(
+                                                color: AppColors.textColor)),
+                                        content: const Text(
+                                            'Attendance is marked!',
+                                            style: TextStyle(
+                                                color: AppColors.textColor)),
                                         actions: <Widget>[
                                           TextButton(
-                                            child: const Text('OK'),
+                                            child: const Text('OK',
+                                                style: TextStyle(
+                                                    color:
+                                                        AppColors.textColor)),
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             },
