@@ -26,6 +26,11 @@ Make sure you have Flutter installed on your development environment before proc
 
 Happy Coding!
 
+## Language & Framework used
+
+- **Dart**
+- **Flutter**
+
 ## App Screenshots (version 1.0)
 
 Log In & Sign Up</br>
