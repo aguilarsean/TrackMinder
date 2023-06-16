@@ -35,11 +35,7 @@ Home & Profile</br>
 <img src="assets/images/screenshots/ss3.png" width="250"> <img src="assets/images/screenshots/ss4.png" width="250">
 
 Student & Professor Home</br>
-<<<<<<< HEAD
 <img src="assets/images/screenshots/ss8.png" width="250"> <img src="assets/images/screenshots/ss3.png" width="250">
-=======
-<img src="assets/images/screenshots/ss8.png" width="250"> <img src="assets/images/screenshots/ss3.png" width="250"> 
->>>>>>> c897b44f2d37df15046b0315a41befb3aaf4e558
 
 Student Courses & Attendance</br>
 <img src="assets/images/screenshots/ss5.png" width="250"> <img src="assets/images/screenshots/ss7.png" width="250">
