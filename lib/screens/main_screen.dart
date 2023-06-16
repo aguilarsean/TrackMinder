@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_final_fields
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -60,10 +62,9 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.accentColor,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         backgroundColor: AppColors.accentColor,
-        elevation: 0,
         title: Text(
           _screenTitles[_currentIndex],
           style: const TextStyle(
@@ -80,7 +81,10 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
-      body: _screens[_currentIndex],
+      body: Container(
+        color: AppColors.accentColor,
+        child: _screens[_currentIndex],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {

@@ -112,6 +112,7 @@ class _HomeContentState extends State<HomeContent> {
       backgroundColor: AppColors.accentColor,
       body: SafeArea(
         child: Container(
+          color: AppColors.accentColor,
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -132,43 +133,50 @@ class _HomeContentState extends State<HomeContent> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   greeting,
-                  style:
-                      const TextStyle(fontSize: 16, color: AppColors.textColor),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: AppColors.textColor,
+                  ),
                 ),
               ),
               const SizedBox(height: 30),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.width * 1 / 2.35,
-                  decoration: BoxDecoration(
+              LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  final carouselHeight = constraints.maxWidth * 1 / 2.35;
+                  return ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: CarouselSlider(
-                    items: images.map((image) {
-                      return Builder(
-                        builder: (BuildContext context) {
-                          return Image.asset(
-                            image,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
+                    child: Container(
+                      width: double.infinity,
+                      height: carouselHeight,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: CarouselSlider(
+                        items: images.map((image) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return Image.asset(
+                                image,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                              );
+                            },
                           );
-                        },
-                      );
-                    }).toList(),
-                    options: CarouselOptions(
-                      autoPlay: true,
-                      autoPlayInterval: const Duration(seconds: 7),
-                      onPageChanged: (index, reason) {
-                        setState(() {
-                          _currentImageIndex = index;
-                        });
-                      },
-                      viewportFraction: 1.0,
+                        }).toList(),
+                        options: CarouselOptions(
+                          autoPlay: true,
+                          autoPlayInterval: const Duration(seconds: 7),
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              _currentImageIndex = index;
+                            });
+                          },
+                          viewportFraction: 1.0,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
               const SizedBox(height: 1),
               Row(
@@ -192,7 +200,7 @@ class _HomeContentState extends State<HomeContent> {
                 }).toList(),
               ),
               const SizedBox(height: 20),
-              Container(
+              Expanded(
                 child: GridView.count(
                   crossAxisCount: 2,
                   shrinkWrap: true,
@@ -251,9 +259,11 @@ class _HomeContentState extends State<HomeContent> {
                                         size: 40,
                                         color: AppColors.primaryColor),
                                     SizedBox(height: 10),
-                                    Text('Dashboard',
-                                        style: TextStyle(
-                                            color: AppColors.textColor)),
+                                    Text(
+                                      'Dashboard',
+                                      style:
+                                          TextStyle(color: AppColors.textColor),
+                                    ),
                                   ],
                                 ),
                               ),
