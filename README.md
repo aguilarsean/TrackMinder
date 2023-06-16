@@ -26,21 +26,19 @@ Make sure you have Flutter installed on your development environment before proc
 
 Happy Coding!
 
-## App Screenshots
+## App Screenshots (version 1.0)
 
-version 1.0
+Log In & Sign Up</br>
+<img src="assets/images/screenshots/ss1.png" width="250"> <img src="assets/images/screenshots/ss2.png" width="250">
 
-Log In & Sign Up
-| ![Log In]('assets/images/screenshots/ss1.png') | ![Sign Up]('assets/images/screenshots/ss2.png') |
+Home & Profile</br>
+<img src="assets/images/screenshots/ss3.png" width="250"> <img src="assets/images/screenshots/ss4.png" width="250">
 
-Home & Profile
-| ![Home]('assets/images/screenshots/ss3.png') | ![Profile]('assets/images/screenshots/ss4.png') |
+Student & Professor Home</br>
+<img src="assets/images/screenshots/ss8.png" width="250"> <img src="assets/images/screenshots/ss3.png" width="250"> 
 
-Student & Professor Home
-| ![Professor Home]('assets/images/screenshots/ss3.png') | ![Student Home]('assets/images/screenshots/ss8.png') |
+Student Courses & Attendance</br>
+<img src="assets/images/screenshots/ss5.png" width="250"> <img src="assets/images/screenshots/ss7.png" width="250">
 
-Student Courses & Attendance
-| ![Courses]('assets/images/screenshots/ss5.png') | ![Attendance]('assets/images/screenshots/ss7.png') |
-
-Professor Courses & Attendance
-| ![Courses]('assets/images/screenshots/ss3.png') | ![Attendance]('assets/images/screenshots/ss6.png') |
+Professor Courses & Attendance</br>
+<img src="assets/images/screenshots/ss5.png" width="250"> <img src="assets/images/screenshots/ss6.png" width="250">
