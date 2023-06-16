@@ -1,4 +1,4 @@
-// ignore_for_file: unused_field, avoid_unnecessary_containers
+// ignore_for_file: unused_field, avoid_unnecessary_containers, prefer_typing_uninitialized_variables, sized_box_for_whitespace
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -117,7 +117,6 @@ class _HomeContentState extends State<HomeContent> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 16),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -125,7 +124,7 @@ class _HomeContentState extends State<HomeContent> {
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textColor,
+                    color: Colors.black,
                   ),
                 ),
               ),
@@ -135,22 +134,39 @@ class _HomeContentState extends State<HomeContent> {
                   greeting,
                   style: const TextStyle(
                     fontSize: 16,
-                    color: AppColors.textColor,
+                    color: Colors.black,
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 10),
               LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {
-                  final carouselHeight = constraints.maxWidth * 1 / 2.35;
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Container(
-                      width: double.infinity,
-                      height: carouselHeight,
-                      decoration: BoxDecoration(
+                  final carouselHeight, carouselWidth;
+
+                  if (constraints.maxWidth <= 400) {
+                    carouselHeight = constraints.maxWidth * 1 / 2.35;
+                    carouselWidth = double.infinity;
+                  } else if (constraints.maxWidth <= 600) {
+                    carouselHeight = constraints.maxWidth * 1 / 3.35;
+                    carouselWidth = double.infinity;
+                  } else if (constraints.maxWidth <= 800) {
+                    carouselHeight = constraints.maxWidth * 1 / 5;
+                    carouselWidth = MediaQuery.of(context).size.width * 0.5;
+                  } else {
+                    carouselHeight = constraints.maxWidth * 1 / 8;
+                    carouselWidth = MediaQuery.of(context).size.width * 0.5;
+                  }
+
+                  return Container(
+                    width: carouselWidth,
+                    height: carouselHeight,
+                    decoration: ShapeDecoration(
+                      shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
                       child: CarouselSlider(
                         items: images.map((image) {
                           return Builder(
@@ -178,7 +194,6 @@ class _HomeContentState extends State<HomeContent> {
                   );
                 },
               ),
-              const SizedBox(height: 1),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: images.map((image) {
@@ -193,16 +208,17 @@ class _HomeContentState extends State<HomeContent> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: _currentImageIndex == index
-                          ? AppColors.primaryColor
+                          ? Colors.blue
                           : Colors.grey,
                     ),
                   );
                 }).toList(),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               Expanded(
                 child: GridView.count(
-                  crossAxisCount: 2,
+                  crossAxisCount:
+                      MediaQuery.of(context).size.width >= 600 ? 5 : 2,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
@@ -219,19 +235,31 @@ class _HomeContentState extends State<HomeContent> {
                         },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.all(16),
-                          backgroundColor: AppColors.secondaryColor,
+                          backgroundColor: Colors.blue,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        child: const Column(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.rocket,
-                                size: 40, color: AppColors.primaryColor),
-                            SizedBox(height: 10),
-                            Text('Get Started',
-                                style: TextStyle(color: AppColors.textColor)),
+                            Icon(
+                              Icons.rocket,
+                              size: MediaQuery.of(context).size.width >= 600
+                                  ? 30
+                                  : 40,
+                              color: Colors.white,
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              'Get Started',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize:
+                                      MediaQuery.of(context).size.width >= 1000
+                                          ? 14
+                                          : 15),
+                            ),
                           ],
                         ),
                       ),
@@ -247,22 +275,33 @@ class _HomeContentState extends State<HomeContent> {
                                 onPressed: () {},
                                 style: ElevatedButton.styleFrom(
                                   padding: const EdgeInsets.all(16),
-                                  backgroundColor: AppColors.secondaryColor,
+                                  backgroundColor: Colors.blue,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
-                                child: const Column(
+                                child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.dashboard,
-                                        size: 40,
-                                        color: AppColors.primaryColor),
-                                    SizedBox(height: 10),
+                                    Icon(
+                                      Icons.dashboard,
+                                      size: MediaQuery.of(context).size.width >=
+                                              600
+                                          ? 30
+                                          : 40,
+                                      color: Colors.white,
+                                    ),
+                                    const SizedBox(height: 10),
                                     Text(
                                       'Dashboard',
-                                      style:
-                                          TextStyle(color: AppColors.textColor),
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width >=
+                                                  1000
+                                              ? 14
+                                              : 15),
                                     ),
                                   ],
                                 ),
@@ -275,13 +314,17 @@ class _HomeContentState extends State<HomeContent> {
                                 color: Colors.black.withOpacity(0.5),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: const Center(
+                              child: Center(
                                 child: Text(
                                   'Coming Soon',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 16,
+                                    fontSize:
+                                        MediaQuery.of(context).size.width >=
+                                                1000
+                                            ? 16
+                                            : 14,
                                   ),
                                 ),
                               ),

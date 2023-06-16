@@ -24,8 +24,8 @@ void main() async {
         projectId: projectId,
       ),
     );
-  } catch (e) {
-    // print('Firebase initialization failed: $e');
+  } catch (error) {
+    // print('Firebase initialization failed: $error');
   }
 
   runApp(const MyApp());
@@ -64,7 +64,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Track Minder',
+      title: 'TrackMinder',
       theme: ThemeData(
         fontFamily: AppFonts.ubuntu.fontFamily,
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.secondaryColor),

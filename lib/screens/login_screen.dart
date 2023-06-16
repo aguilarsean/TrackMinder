@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_final_fields
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -149,7 +151,7 @@ class _LogInScreenState extends State<LogInScreen> {
                     _hideLoadingAlert();
 
                     _showError('Invalid email or password.');
-                    print("Error ${error.toString()}");
+                    // print("Error ${error.toString()}");
                   });
                 }),
                 signUpOption(),
