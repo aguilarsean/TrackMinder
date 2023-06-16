@@ -660,8 +660,18 @@ class TabScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.accentColor,
       appBar: AppBar(
-        title: Text(tabName),
+        backgroundColor: AppColors.accentColor,
+        title:
+            Text(tabName, style: const TextStyle(color: AppColors.textColor)),
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(10),
+          child: Divider(
+            color: Colors.black12,
+            thickness: 0.7,
+          ),
+        ),
       ),
       body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         stream: FirebaseFirestore.instance
@@ -681,7 +691,8 @@ class TabScreen extends StatelessWidget {
                 final idNumber = idNumbers[index];
 
                 return ListTile(
-                  title: Text(idNumber),
+                  title: Text(idNumber,
+                      style: const TextStyle(color: AppColors.textColor)),
                 );
               },
             );
