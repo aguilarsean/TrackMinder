@@ -102,7 +102,7 @@ class _LogInScreenState extends State<LogInScreen> {
                 const SizedBox(
                   height: 5,
                 ),
-                forgetPassword(context),
+                importantOptions(context),
                 const SizedBox(
                   height: 20,
                 ),
@@ -181,7 +181,7 @@ class _LogInScreenState extends State<LogInScreen> {
     );
   }
 
-  Widget forgetPassword(BuildContext context) {
+  Widget importantOptions(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -220,20 +220,21 @@ class _LogInScreenState extends State<LogInScreen> {
             ],
           ),
         ),
-        Container(
-          width: MediaQuery.of(context).size.width * 0.5,
-          height: 35,
-          alignment: Alignment.bottomRight,
-          child: TextButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ResetPasswordScreen(),
+        Expanded(
+          child: Container(
+            height: 35,
+            alignment: Alignment.bottomRight,
+            child: TextButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ResetPasswordScreen(),
+                ),
               ),
-            ),
-            child: const Text(
-              "Forgot Password?",
-              style: TextStyle(color: Colors.white70),
+              child: const Text(
+                "Forgot Password?",
+                style: TextStyle(color: Colors.white70),
+              ),
             ),
           ),
         ),
