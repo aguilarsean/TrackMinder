@@ -26,10 +26,11 @@ Make sure you have Flutter installed on your development environment before proc
 
 Happy Coding!
 
-## Language & Framework used
+## Language, Framework, & Database
 
 - **Dart**
 - **Flutter**
+- **Firebase:** Authentication, Firestore Database, Storage
 
 ## App Screenshots (version 1.0)
 
