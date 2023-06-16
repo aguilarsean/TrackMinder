@@ -32,13 +32,10 @@ Log In & Sign Up</br>
 <img src="assets/images/screenshots/ss1.png" width="250"> <img src="assets/images/screenshots/ss2.png" width="250">
 
 Home & Profile</br>
-<img src="assets/images/screenshots/ss3.png" width="250"> <img src="assets/images/screenshots/ss4.png" width="250">
-
-Student & Professor Home</br>
-<img src="assets/images/screenshots/ss8.png" width="250"> <img src="assets/images/screenshots/ss3.png" width="250">
+<img src="assets/images/screenshots/ss3.png" width="250"> <img src="assets/images/screenshots/ss4.png" width="250"> <img src="assets/images/screenshots/ss5.png" width="250">
 
 Student Courses & Attendance</br>
-<img src="assets/images/screenshots/ss5.png" width="250"> <img src="assets/images/screenshots/ss7.png" width="250">
+<img src="assets/images/screenshots/ss10.png" width="250"> <img src="assets/images/screenshots/ss11.png" width="250">
 
 Professor Courses & Attendance</br>
-<img src="assets/images/screenshots/ss5.png" width="250"> <img src="assets/images/screenshots/ss6.png" width="250">
+<img src="assets/images/screenshots/ss6.png" width="250"> <img src="assets/images/screenshots/ss7.png" width="250"> <img src="assets/images/screenshots/ss8.png" width="250"> <img src="assets/images/screenshots/ss9.png" width="250"> <img src="assets/images/screenshots/ss10.png" width="250">
