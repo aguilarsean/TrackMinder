@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trackminder/screens/login_screen.dart';
 import 'package:trackminder/screens/main_screen.dart';
+import 'package:trackminder/utils/colors_typography.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -65,7 +66,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Track Minder',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        fontFamily: AppFonts.ubuntu.fontFamily,
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.secondaryColor),
         useMaterial3: true,
       ),
       home: _isLoggedIn ? const MainScreen() : const LogInScreen(),
